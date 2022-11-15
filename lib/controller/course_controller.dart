@@ -13,9 +13,9 @@ class CourseController extends GetxController {
       isLoading(true);
       http.Response response = await http.get(Uri.tryParse(
           'http://192.168.1.85:8080/Prenotazioni0_war_exploded/ServletCourse')!);
+      //'http://localhost:8080/Prenotazioni0_war_exploded/ServletCourse')!);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
-        print(result);
         courseList = List.from(result).map((e) => Course.fromJson(e)).toList();
       } else {
         print("Error while fatching data");

@@ -5,6 +5,7 @@ class Teacher {
   int? id;
   String? name;
   String? surname;
+  String? description;
   List<Course>? teached_courses;
   double? hourly_rate;
   int? num_lectures_given;
@@ -16,6 +17,7 @@ class Teacher {
       {required this.id,
       required this.name,
       required this.surname,
+      required this.description,
       required this.teached_courses,
       required this.hourly_rate,
       required this.num_lectures_given,
@@ -27,6 +29,7 @@ class Teacher {
     id = json['id'];
     name = json['name'];
     surname = json['surname'];
+    description = json['description'];
     teached_courses = List.from(json['teached_courses'])
         .map((e) => Course.fromJson(e))
         .toList();

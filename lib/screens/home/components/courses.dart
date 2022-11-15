@@ -1,6 +1,9 @@
 import 'package:booking_lecture/controller/course_controller.dart';
+import 'package:booking_lecture/controller/nav_bar_controller.dart';
+import 'package:booking_lecture/controller/teacher_controller.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:booking_lecture/models/Course.dart';
+import 'package:booking_lecture/screens/teacher/teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -19,6 +22,8 @@ class Courses extends StatefulWidget {
 
 class _CoursesState extends State<Courses> {
   CourseController courseController = Get.put(CourseController());
+  NavBarController navBarController = Get.find();
+  TeacherController teacherController = Get.put(TeacherController());
 
   @override
   void initState() {
@@ -41,7 +46,7 @@ class _CoursesState extends State<Courses> {
           scrollDirection: Axis.horizontal,
           child: Obx(
             () => courseController.isLoading.value
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 : Row(
@@ -49,7 +54,11 @@ class _CoursesState extends State<Courses> {
                       courseController.courseList.length,
                       (index) => CourseCard(
                         course: courseController.courseList[index],
-                        press: () {},
+                        press: () {
+                          navBarController.changePageIndex(1);
+                          teacherController.filterCourseId =
+                              courseController.courseList[index].id!;
+                        },
                       ),
                     ),
                   ),

@@ -57,7 +57,7 @@ class TopFiveTeacherCard extends StatelessWidget {
                                     Text(teacher.teached_courses![index].title!,
                                         style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 10,
+                                          fontSize: 9,
                                         )),
                               ),
                             ))),

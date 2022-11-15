@@ -1,3 +1,4 @@
+import 'package:booking_lecture/screens/teacher/teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -14,7 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     HomePage(),
-    Container(),
+    TeacherScreen(),
     Container(),
     Container()
   ];

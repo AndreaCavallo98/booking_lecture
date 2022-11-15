@@ -21,7 +21,7 @@ class _TopFiveTeacherState extends State<TopFiveTeacher> {
   @override
   void initState() {
     super.initState();
-    teacherController.getTopFiveTeacher();
+    teacherController.getTeacher("topfive");
   }
 
   @override
@@ -44,11 +44,11 @@ class _TopFiveTeacherState extends State<TopFiveTeacher> {
                   )
                 : Row(
                     children: List.generate(
-                      teacherController.teacherListTopFive.length,
+                      teacherController.teacherList.length,
                       (index) => Padding(
                         padding: const EdgeInsets.only(left: defaultPadding),
                         child: TopFiveTeacherCard(
-                          teacher: teacherController.teacherListTopFive[index],
+                          teacher: teacherController.teacherList[index],
                         ),
                       ),
                     ),

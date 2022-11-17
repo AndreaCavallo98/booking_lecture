@@ -36,35 +36,33 @@ class _TeacherScreenState extends State<TeacherScreen> {
               const CustomAppBar(text: "Teachers", title: "All"),
               Padding(
                 padding: const EdgeInsets.all(defaultPadding),
-                child: Obx(
-                  () => teacherController.isLoading.value
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: teacherController.teacherList.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                          itemBuilder: (context, index) => TeacherCard(
-                            teacher: teacherController.teacherList[index],
-                            press: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TeacherDetailsScreen(
-                                  selectedTeacher:
-                                      teacherController.teacherList[index],
-                                ),
+                child: Obx(() => teacherController.isLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: teacherController.teacherList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
+                        itemBuilder: (context, index) => TeacherCard(
+                          teacher: teacherController.teacherList[index],
+                          press: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TeacherDetailsScreen(
+                                selectedTeacher:
+                                    teacherController.teacherList[index],
                               ),
                             ),
                           ),
                         ),
-                ),
+                      )),
               ),
             ],
           ),

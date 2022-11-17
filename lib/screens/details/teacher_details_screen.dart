@@ -3,6 +3,7 @@ import 'package:booking_lecture/constants.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:booking_lecture/models/Teacher.dart';
 import 'package:booking_lecture/screens/booking/booking_screen.dart';
+import 'package:booking_lecture/screens/details/components/reviews.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/heightlight.dart';
@@ -104,9 +105,7 @@ class TeacherDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                child: Center(child: Text("TO DO Show Review")),
-              )
+              Reviews(idTeacher: selectedTeacher.id!)
             ],
           ),
         ),

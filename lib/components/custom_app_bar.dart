@@ -1,3 +1,4 @@
+import 'package:booking_lecture/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -35,13 +36,15 @@ class CustomAppBar extends StatelessWidget {
           ),
           const Spacer(),
           IconButton(
-            onPressed: () => {},
-            icon: SvgPicture.asset("assets/icons/Serach.svg"),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchScreen(),
+              ),
+            ),
+            icon: Icon(Icons.filter_list),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset("assets/icons/Chat.svg"),
-          ),
+          // TO DO: order by
         ],
       ),
     );

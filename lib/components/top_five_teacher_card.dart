@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:booking_lecture/models/Teacher.dart';
+import 'package:booking_lecture/screens/details/teacher_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:string_to_hex/string_to_hex.dart';
 
@@ -20,11 +21,13 @@ class TopFiveTeacherCard extends StatelessWidget {
     return FittedBox(
       child: GestureDetector(
         onTap: () {
-          /*Navigator.push(
+          Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DoctorDetailsScreen(),
-              ));*/
+                builder: (context) => TeacherDetailsScreen(
+                  selectedTeacher: teacher,
+                ),
+              ));
         },
         child: Container(
           padding: EdgeInsets.all(defaultPadding),

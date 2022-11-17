@@ -69,6 +69,8 @@ class MainScreen extends StatelessWidget {
               onTabChange: (pageNum) {
                 navBarController.changePageIndex(pageNum);
                 teacherController.filterCourseId = -1;
+                teacherController.filterDate = "";
+                teacherController.filterMaxHourlyRate = -1;
               },
             ),
           ),

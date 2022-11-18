@@ -30,8 +30,11 @@ class CourseController extends GetxController {
 
   List<Course> getCourseDropdownItem() {
     List<Course> courseListDropdownItem = courseList;
-    courseListDropdownItem.add(new Course(
-        id: -1, title: "No selection", color: '1a1a1a', image_name: ""));
+    if (!courseList.any((item) => item.id == -1)) {
+      courseListDropdownItem.add(new Course(
+          id: -1, title: "No selection", color: '1a1a1a', image_name: ""));
+    }
+
     courseListDropdownItem.sort((a, b) => a.id!.compareTo(b.id!));
     return courseListDropdownItem;
   }

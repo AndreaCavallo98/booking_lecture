@@ -37,6 +37,7 @@ class _SearchFormState extends State<SearchForm> {
   Widget build(BuildContext context) {
     return Form(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(
             () => courseController.isLoading.value
@@ -115,6 +116,16 @@ class _SearchFormState extends State<SearchForm> {
                   )
                 ],
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Text(
+              "Select your hourly rate range",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6!
+                  .copyWith(fontWeight: FontWeight.normal),
             ),
           ),
           Container(

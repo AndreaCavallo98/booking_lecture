@@ -70,7 +70,7 @@ class MainScreen extends StatelessWidget {
                 navBarController.changePageIndex(pageNum);
                 teacherController.filterCourseId = -1;
                 teacherController.filterDate = "";
-                teacherController.filterMaxHourlyRate = -1;
+                teacherController.filterMaxHourlyRate = 0;
               },
             ),
           ),

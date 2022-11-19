@@ -44,7 +44,8 @@ dependencies:
   flutter_svg: ^1.1.0
   badges: ^2.0.3
   string_to_hex: ^0.2.2
-  intl: ^0.16.1
+  intl: ^0.17.0
+  jiffy: ^5.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:booking_lecture/controller/course_controller.dart';
 import 'package:booking_lecture/controller/teacher_controller.dart';
 import 'package:booking_lecture/main.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 
 import '../../../constants.dart';
 
@@ -21,6 +24,7 @@ class SearchForm extends StatefulWidget {
 
 class _SearchFormState extends State<SearchForm> {
   CourseController courseController = Get.find();
+  List<Course> _dropDownCourseList = [];
   TeacherController teacherController = Get.find();
   double _correntSliderValue = 0;
   int _currentCourseId = -1;
@@ -29,8 +33,13 @@ class _SearchFormState extends State<SearchForm> {
 
   @override
   void initState() {
-    courseController.fetchData();
     super.initState();
+    _dropDownCourseList = courseController.getCourseDropdownItem();
+    _correntSliderValue = teacherController.filterMaxHourlyRate.toDouble();
+    _currentCourseId = teacherController.filterCourseId;
+    _selectedDate = teacherController.filterDate;
+    courseController.fetchData();
+    teacherController.getMaxHourlyRateVaule();
   }
 
   @override
@@ -45,14 +54,15 @@ class _SearchFormState extends State<SearchForm> {
                     child: CircularProgressIndicator(),
                   )
                 : DropdownButtonFormField(
+                    value: _currentCourseId,
                     icon: const Icon(
                       Icons.menu_book,
                       color: primaryColor,
                     ),
-                    items: courseController
-                        .getCourseDropdownItem()
+                    items: _dropDownCourseList
                         .map<DropdownMenuItem<int>>((Course courseItem) {
                       return DropdownMenuItem(
+                        //senabled: courseItem.id == _currentCourseId,
                         value: courseItem.id,
                         child: Row(children: [
                           Icon(
@@ -86,7 +96,10 @@ class _SearchFormState extends State<SearchForm> {
               onPressed: () async {
                 await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
+                  initialDate: _selectedDate == ""
+                      ? DateTime.now()
+                      : DateTime.parse(Jiffy(_selectedDate, "dd/MM/yyyy")
+                          .format("yyyy-MM-dd")),
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2025),
                 ).then((value) {
@@ -104,7 +117,9 @@ class _SearchFormState extends State<SearchForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _selectedDate,
+                    _selectedDate == ""
+                        ? "Avaliable in date..."
+                        : _selectedDate,
                     style: TextStyle(
                       color: textColor.withOpacity(0.7),
                       fontSize: 15,
@@ -137,8 +152,8 @@ class _SearchFormState extends State<SearchForm> {
             child: Slider(
               value: _correntSliderValue,
               min: 0,
-              max: 100,
-              divisions: 100,
+              max: teacherController.maxSliderHourlyRate.toDouble(),
+              divisions: teacherController.maxSliderHourlyRate,
               thumbColor: primaryColor,
               activeColor: primaryColor,
               label: _correntSliderValue.round().toString(),
@@ -157,7 +172,7 @@ class _SearchFormState extends State<SearchForm> {
                 teacherController.filterCourseId = _currentCourseId;
                 teacherController.filterDate = _selectedDate;
                 teacherController.filterMaxHourlyRate =
-                    _correntSliderValue == 0 ? -1 : _correntSliderValue.round();
+                    _correntSliderValue == 0 ? 0 : _correntSliderValue.round();
                 teacherController.getTeacher("all");
               },
               child: Text("Search"),

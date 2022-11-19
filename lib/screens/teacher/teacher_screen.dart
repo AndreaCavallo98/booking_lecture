@@ -40,29 +40,35 @@ class _TeacherScreenState extends State<TeacherScreen> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: teacherController.teacherList.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                        ),
-                        itemBuilder: (context, index) => TeacherCard(
-                          teacher: teacherController.teacherList[index],
-                          press: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TeacherDetailsScreen(
-                                selectedTeacher:
-                                    teacherController.teacherList[index],
+                    : teacherController.teacherList.isEmpty
+                        ? Container(
+                            child: const Center(
+                                child: Text(
+                                    "No teacher finded with your requirement, try to change filter")),
+                          )
+                        : GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: teacherController.teacherList.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                            ),
+                            itemBuilder: (context, index) => TeacherCard(
+                              teacher: teacherController.teacherList[index],
+                              press: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TeacherDetailsScreen(
+                                    selectedTeacher:
+                                        teacherController.teacherList[index],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      )),
+                          )),
               ),
             ],
           ),

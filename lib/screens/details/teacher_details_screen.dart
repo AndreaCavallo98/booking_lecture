@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/heightlight.dart';
 import '../../components/rating.dart';
+import '../../components/section_title.dart';
 
 class TeacherDetailsScreen extends StatelessWidget {
   TeacherDetailsScreen({Key? key, required this.selectedTeacher})
@@ -27,7 +28,7 @@ class TeacherDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset("assets/images/Serena_Gome.png"),
+              Image.asset("assets/images/giorgia.png"),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: ElevatedButton(

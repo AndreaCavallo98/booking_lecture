@@ -36,15 +36,52 @@ class _ReviewsState extends State<Reviews> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: SectionTitle(
-            title: "Reviews",
-            pressOnSeeAll: () {},
-          ),
-        ),
+    return Obx(
+      () => reviewController.isLoading.value
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : reviewController.reviewList.isEmpty
+              ? Container(
+                  child: Center(child: Text("No reviews yet")),
+                )
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: defaultPadding),
+                    child: Row(
+                        children: List.generate(
+                            reviewController.reviewList.length,
+                            (index) => Container(
+                                  width: 300,
+                                  height: 160,
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: defaultPadding,
+                                      ),
+                                      child: ReviewCard(
+                                        image: "assets/images/Serena_Gome.png",
+                                        name:
+                                            "${reviewController.reviewList[index].user_name} ${reviewController.reviewList[index].user_surname}",
+                                        date: reviewController
+                                            .reviewList[index].creation_date,
+                                        comment: reviewController
+                                            .reviewList[index].text,
+                                        rating: reviewController
+                                            .reviewList[index].rate,
+
+                                        /*onTap: () => setState(() {
+                              isMore = !isMore;
+                        }),
+                        isLess: isMore,*/
+                                      )),
+                                ))),
+                  ),
+                ),
+    );
+
+    Stack(
+      children: <Widget>[
         Obx(
           () => reviewController.isLoading.value
               ? const Center(
@@ -54,14 +91,14 @@ class _ReviewsState extends State<Reviews> {
                   ? Container(
                       child: Center(child: Text("No reviews yet")),
                     )
-                  : SizedBox(
-                      height: 700,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: reviewController.reviewList.length,
-                        itemBuilder: (context, index) {
-                          return ReviewCard(
+                  : ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: reviewController.reviewList.length,
+                      itemBuilder: (BuildContext context, int index) => Padding(
+                          padding: const EdgeInsets.only(left: defaultPadding),
+                          child: ReviewCard(
                             image: "assets/images/Serena_Gome.png",
                             name:
                                 "${reviewController.reviewList[index].user_name} ${reviewController.reviewList[index].user_surname}",
@@ -71,13 +108,11 @@ class _ReviewsState extends State<Reviews> {
                             rating: reviewController.reviewList[index].rate,
 
                             /*onTap: () => setState(() {
-                  isMore = !isMore;
-                }),
-                isLess: isMore,*/
-                          );
-                        },
-                      )),
-        ),
+                        isMore = !isMore;
+                    }),
+                    isLess: isMore,*/
+                          ))),
+        )
       ],
     );
   }

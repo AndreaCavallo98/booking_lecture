@@ -69,16 +69,17 @@ class ReviewCard extends StatelessWidget {
               SizedBox(width: 16.0),
               Text(
                 date,
-                style: TextStyle(fontSize: 18.0),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ],
           ),
           SizedBox(height: 8.0),
           Text(
-            comment,
+            comment +
+                "dsfsdfdsfdsfsfsdfsdfsdfsdfsdfsdsdfsdfsdfsffnbshjchndnjsncshjncjsdncjsdncjsncjhsnchjsncjhsdncjhsncjshdcnjshncjhsdcnjfsdfdsfsdfsdfdssfsfsfsdfdhsbferbhjberjhvbjhdfbvdfbvjhhdfbvdfjh",
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.caption,
           ),
           // GestureDetector(
           //   onTap: onTap,

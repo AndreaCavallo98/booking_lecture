@@ -11,13 +11,14 @@ class TeacherController extends GetxController {
   int filterCourseId = -1;
   String filterDate = "";
   int filterMaxHourlyRate = 0;
+  String searchInput = "";
 
   getTeacher(String type) async {
     try {
       isLoading(true);
       http.Response response = await http.get(Uri.tryParse(
-          'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletTeacher?type=$type&courseid=$filterCourseId&avaliabledate=$filterDate&maxhourlyrate=$filterMaxHourlyRate')!);
-      //'http://localhost:8080/Prenotazioni0_war_exploded/ServletTeacher?type=$type&courseid=$filterCourseId&avaliabledate=$filterDate&maxhourlyrate=$filterMaxHourlyRate')!);
+          //'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletTeacher?type=$type&courseid=$filterCourseId&avaliabledate=$filterDate&maxhourlyrate=$filterMaxHourlyRate')!);
+          'http://localhost:8080/Prenotazioni0_war_exploded/ServletTeacher?type=$type&courseid=$filterCourseId&avaliabledate=$filterDate&maxhourlyrate=$filterMaxHourlyRate')!);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         teacherList =
@@ -32,11 +33,27 @@ class TeacherController extends GetxController {
     }
   }
 
+  List<Teacher> getTeacherList() {
+    if (searchInput.isEmpty) {
+      return teacherList;
+    } else {
+      return teacherList
+          .where((element) =>
+              element.name!.toLowerCase().contains(searchInput.toLowerCase()) ||
+              element.surname!
+                  .toLowerCase()
+                  .contains(searchInput.toLowerCase()) ||
+              element.teached_courses!.any((el) =>
+                  el.title!.toLowerCase().contains(searchInput.toLowerCase())))
+          .toList();
+    }
+  }
+
   getMaxHourlyRateVaule() async {
     try {
       http.Response response = await http.get(Uri.tryParse(
-          'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletTeacher?type=maxhourlyrate')!);
-      //'http://localhost:8080/Prenotazioni0_war_exploded/ServletTeacher?type=maxhourlyrate')!);
+          //'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletTeacher?type=maxhourlyrate')!);
+          'http://localhost:8080/Prenotazioni0_war_exploded/ServletTeacher?type=maxhourlyrate')!);
       print(response.body);
       if (response.statusCode == 200) {
         maxSliderHourlyRate = int.parse(response.body);

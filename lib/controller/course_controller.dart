@@ -13,8 +13,8 @@ class CourseController extends GetxController {
     try {
       isLoading(true);
       http.Response response = await http.get(Uri.tryParse(
-          'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletCourse')!);
-      //'http://localhost:8080/Prenotazioni0_war_exploded/ServletCourse')!);
+          //'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletCourse')!);
+          'http://localhost:8080/Prenotazioni0_war_exploded/ServletCourse')!);
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         courseList = List.from(result).map((e) => Course.fromJson(e)).toList();

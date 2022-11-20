@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../components/custom_app_bar.dart';
+import '../../models/Teacher.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({
@@ -19,10 +20,13 @@ class TeacherScreen extends StatefulWidget {
 
 class _TeacherScreenState extends State<TeacherScreen> {
   TeacherController teacherController = Get.find();
+  final searchController = TextEditingController();
+  //String searchInput = te;
 
   @override
   void initState() {
     super.initState();
+    searchController.text = teacherController.searchInput;
     teacherController.getTeacher("all");
   }
 
@@ -36,11 +40,28 @@ class _TeacherScreenState extends State<TeacherScreen> {
               const CustomAppBar(text: "Teachers", title: "All"),
               Padding(
                 padding: const EdgeInsets.all(defaultPadding),
+                child: TextField(
+                  controller: searchController,
+                  decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Search name or course...',
+                      border: OutlineInputBorder(
+                          //borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(color: primaryColor))),
+                  onChanged: ((value) {
+                    setState(() {
+                      teacherController.searchInput = value;
+                    });
+                  }),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(defaultPadding),
                 child: Obx(() => teacherController.isLoading.value
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
-                    : teacherController.teacherList.isEmpty
+                    : teacherController.getTeacherList().isEmpty
                         ? Container(
                             child: const Center(
                                 child: Text(
@@ -49,7 +70,8 @@ class _TeacherScreenState extends State<TeacherScreen> {
                         : GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: teacherController.teacherList.length,
+                            itemCount:
+                                teacherController.getTeacherList().length,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -57,13 +79,14 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               mainAxisSpacing: 8,
                             ),
                             itemBuilder: (context, index) => TeacherCard(
-                              teacher: teacherController.teacherList[index],
+                              teacher:
+                                  teacherController.getTeacherList()[index],
                               press: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => TeacherDetailsScreen(
-                                    selectedTeacher:
-                                        teacherController.teacherList[index],
+                                    selectedTeacher: teacherController
+                                        .getTeacherList()[index],
                                   ),
                                 ),
                               ),

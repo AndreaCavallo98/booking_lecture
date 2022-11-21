@@ -1,7 +1,7 @@
 import 'package:booking_lecture/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../main/main_screen.dart';
+import '../dashboard/dashboard_screen.dart';
 import 'components/calendar.dart';
 
 class BookingScreen extends StatefulWidget {
@@ -79,7 +79,7 @@ class _BookingScreenState extends State<BookingScreen> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MainScreen(),
+                  builder: (context) => DashBoard(),
                 ),
               ),
               child: Text("Confirm  Appoinment"),

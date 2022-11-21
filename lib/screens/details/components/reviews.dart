@@ -69,11 +69,6 @@ class _ReviewsState extends State<Reviews> {
                                             .reviewList[index].text,
                                         rating: reviewController
                                             .reviewList[index].rate,
-
-                                        /*onTap: () => setState(() {
-                              isMore = !isMore;
-                        }),
-                        isLess: isMore,*/
                                       )),
                                 ))),
                   ),

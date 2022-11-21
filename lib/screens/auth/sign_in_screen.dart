@@ -2,6 +2,7 @@ import 'package:booking_lecture/screens/auth/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
+import 'components/sign_in_form.dart';
 
 class SignInScreen extends StatelessWidget {
   @override
@@ -35,7 +36,7 @@ class SignInScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: defaultPadding * 1.5),
-              //SignInForm(),
+              SignInForm(),
             ],
           ),
         ),

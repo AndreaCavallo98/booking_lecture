@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 const primaryColor = Color.fromARGB(255, 214, 131, 37);
 const textColor = Color(0xFF35364F);
@@ -9,6 +10,15 @@ const defaultPadding = 16.0;
 
 const emailError = 'Enter a valid email address';
 const requiredField = "This field is required";
+
+final passwordValidator = MultiValidator(
+  [
+    RequiredValidator(errorText: 'password is required'),
+    //MinLengthValidator(8, errorText: 'password must be at least 8 digits long'),
+    //PatternValidator(r'(?=.*?[#?!@$%^&*-])',
+    //errorText: 'passwords must have at least one special character')
+  ],
+);
 
 const InputDecoration dropdownInputDecoration = InputDecoration(
   fillColor: Colors.white,

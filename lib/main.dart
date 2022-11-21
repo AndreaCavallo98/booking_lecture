@@ -1,9 +1,13 @@
-import 'package:booking_lecture/screens/main/main_screen.dart';
+import 'package:booking_lecture/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'app_theme.dart';
+import 'screens/main/main_screen.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: appTheme(context),
       home: MainScreen(),

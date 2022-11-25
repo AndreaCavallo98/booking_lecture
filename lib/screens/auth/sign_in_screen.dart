@@ -1,10 +1,15 @@
+import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/screens/auth/sign_up_screen.dart';
+import 'package:booking_lecture/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../constants.dart';
 import 'components/sign_in_form.dart';
 
 class SignInScreen extends StatelessWidget {
+  AuthController authController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

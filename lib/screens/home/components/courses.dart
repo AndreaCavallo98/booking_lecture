@@ -28,7 +28,10 @@ class _CoursesState extends State<Courses> {
   @override
   void initState() {
     super.initState();
-    courseController.fetchData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      courseController.fetchData();
+    });
   }
 
   @override

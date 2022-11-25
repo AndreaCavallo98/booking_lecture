@@ -26,74 +26,79 @@ class _TeacherScreenState extends State<TeacherScreen> {
   @override
   void initState() {
     super.initState();
-    searchController.text = teacherController.searchInput;
-    teacherController.getTeacher("all");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      searchController.text = teacherController.searchInput;
+      teacherController.getTeacher("all");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              const CustomAppBar(text: "Teachers", title: "All"),
-              Padding(
-                padding: const EdgeInsets.all(defaultPadding),
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Search name or course...',
-                      border: OutlineInputBorder(
-                          //borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: primaryColor))),
-                  onChanged: ((value) {
-                    setState(() {
-                      teacherController.searchInput = value;
-                    });
-                  }),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              children: [
+                const CustomAppBar(text: "Teachers", title: "All"),
+                Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search name or course...',
+                        border: OutlineInputBorder(
+                            //borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: primaryColor))),
+                    onChanged: ((value) {
+                      setState(() {
+                        teacherController.searchInput = value;
+                      });
+                    }),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(defaultPadding),
-                child: Obx(() => teacherController.isLoading.value
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : teacherController.getTeacherList().isEmpty
-                        ? Container(
-                            child: const Center(
-                                child: Text(
-                                    "No teacher finded with your requirement, try to change filter")),
-                          )
-                        : GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount:
-                                teacherController.getTeacherList().length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
-                            itemBuilder: (context, index) => TeacherCard(
-                              teacher:
-                                  teacherController.getTeacherList()[index],
-                              press: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TeacherDetailsScreen(
-                                    selectedTeacher: teacherController
-                                        .getTeacherList()[index],
+                Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: Obx(() => teacherController.isLoading.value
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : teacherController.getTeacherList().isEmpty
+                          ? Container(
+                              child: const Center(
+                                  child: Text(
+                                      "No teacher finded with your requirement, try to change filter")),
+                            )
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  teacherController.getTeacherList().length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
+                              itemBuilder: (context, index) => TeacherCard(
+                                teacher:
+                                    teacherController.getTeacherList()[index],
+                                press: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TeacherDetailsScreen(
+                                      selectedTeacher: teacherController
+                                          .getTeacherList()[index],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )),
-              ),
-            ],
+                            )),
+                ),
+              ],
+            ),
           ),
         ),
       ),

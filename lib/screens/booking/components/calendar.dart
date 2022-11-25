@@ -1,13 +1,20 @@
+import 'package:booking_lecture/controller/calendar_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants.dart';
 
 class Calendar extends StatefulWidget {
+  Calendar({Key? key, required this.teacherId}) : super(key: key);
+
+  int teacherId;
+
   @override
   _CalendarState createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> {
+  CalendarController calendarController = Get.find();
   DateTime selectedDate = DateTime.now();
 
   int currentDateSelectedIndex = 0;
@@ -55,6 +62,8 @@ class _CalendarState extends State<Calendar> {
                   setState(() {
                     currentDateSelectedIndex = index;
                     selectedDate = DateTime.now().add(Duration(days: index));
+                    calendarController.changeSelectedDate(
+                        widget.teacherId, selectedDate);
                   });
                 },
                 child: Container(

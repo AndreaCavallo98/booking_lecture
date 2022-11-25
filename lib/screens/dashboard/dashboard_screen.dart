@@ -13,7 +13,7 @@ import '../home/home_screen.dart';
 class DashBoard extends StatelessWidget {
   DashBoard({Key? key}) : super(key: key);
 
-  NavBarController navBarController = Get.put(NavBarController());
+  NavBarController navBarController = Get.find();
   TeacherController teacherController = Get.put(TeacherController());
   AuthController authController = Get.find();
 
@@ -75,6 +75,7 @@ class DashBoard extends StatelessWidget {
                 teacherController.filterCourseId = -1;
                 teacherController.filterDate = "";
                 teacherController.filterMaxHourlyRate = 0;
+                teacherController.searchInput = "";
                 if (pageNum == 3) {
                   authController.logout();
                 }

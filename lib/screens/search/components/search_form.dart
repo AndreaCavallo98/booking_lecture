@@ -34,12 +34,15 @@ class _SearchFormState extends State<SearchForm> {
   @override
   void initState() {
     super.initState();
-    _dropDownCourseList = courseController.getCourseDropdownItem();
-    _correntSliderValue = teacherController.filterMaxHourlyRate.toDouble();
-    _currentCourseId = teacherController.filterCourseId;
-    _selectedDate = teacherController.filterDate;
-    courseController.fetchData();
-    teacherController.getMaxHourlyRateVaule();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _dropDownCourseList = courseController.getCourseDropdownItem();
+      _correntSliderValue = teacherController.filterMaxHourlyRate.toDouble();
+      _currentCourseId = teacherController.filterCourseId;
+      _selectedDate = teacherController.filterDate;
+      courseController.fetchData();
+      teacherController.getMaxHourlyRateVaule();
+    });
   }
 
   @override

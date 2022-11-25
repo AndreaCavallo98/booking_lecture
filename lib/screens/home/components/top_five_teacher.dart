@@ -21,7 +21,10 @@ class _TopFiveTeacherState extends State<TopFiveTeacher> {
   @override
   void initState() {
     super.initState();
-    teacherController.getTeacher("topfive");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      teacherController.getTeacher("topfive");
+    });
   }
 
   @override

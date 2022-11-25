@@ -30,8 +30,12 @@ class _ReviewsState extends State<Reviews> {
 
   @override
   void initState() {
-    reviewController.fetchData(widget.idTeacher);
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      reviewController.fetchData(widget.idTeacher);
+    });
+    //print(widget.idTeacher);
   }
 
   @override
@@ -73,42 +77,6 @@ class _ReviewsState extends State<Reviews> {
                                 ))),
                   ),
                 ),
-    );
-
-    Stack(
-      children: <Widget>[
-        Obx(
-          () => reviewController.isLoading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : reviewController.reviewList.isEmpty
-                  ? Container(
-                      child: Center(child: Text("No reviews yet")),
-                    )
-                  : ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: reviewController.reviewList.length,
-                      itemBuilder: (BuildContext context, int index) => Padding(
-                          padding: const EdgeInsets.only(left: defaultPadding),
-                          child: ReviewCard(
-                            image: "assets/images/Serena_Gome.png",
-                            name:
-                                "${reviewController.reviewList[index].user_name} ${reviewController.reviewList[index].user_surname}",
-                            date: reviewController
-                                .reviewList[index].creation_date,
-                            comment: reviewController.reviewList[index].text,
-                            rating: reviewController.reviewList[index].rate,
-
-                            /*onTap: () => setState(() {
-                        isMore = !isMore;
-                    }),
-                    isLess: isMore,*/
-                          ))),
-        )
-      ],
     );
   }
 }

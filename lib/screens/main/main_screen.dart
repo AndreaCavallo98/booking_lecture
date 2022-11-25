@@ -1,5 +1,6 @@
 import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/screens/auth/sign_in_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
@@ -18,13 +19,15 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    authController.checkIfIsConnected();
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      authController.checkIfIsConnected();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() =>
-        authController.authSessionToken == "" ? SignInScreen() : DashBoard());
+    return DashBoard();
   }
 }

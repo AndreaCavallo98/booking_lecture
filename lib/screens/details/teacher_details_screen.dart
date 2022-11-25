@@ -1,10 +1,14 @@
 import 'package:badges/badges.dart';
 import 'package:booking_lecture/constants.dart';
+import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:booking_lecture/models/Teacher.dart';
+import 'package:booking_lecture/screens/auth/sign_in_screen.dart';
 import 'package:booking_lecture/screens/booking/booking_screen.dart';
 import 'package:booking_lecture/screens/details/components/reviews.dart';
+import 'package:booking_lecture/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../components/heightlight.dart';
 import '../../components/rating.dart';
@@ -13,6 +17,8 @@ import '../../components/section_title.dart';
 class TeacherDetailsScreen extends StatelessWidget {
   TeacherDetailsScreen({Key? key, required this.selectedTeacher})
       : super(key: key);
+
+  AuthController authController = Get.find();
 
   Teacher selectedTeacher;
 
@@ -32,12 +38,23 @@ class TeacherDetailsScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookingScreen(),
-                    ),
-                  ),
+                  onPressed: () {
+                    if (authController.jwtToken.value != "") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookingScreen(
+                            teacher: selectedTeacher,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
+                      );
+                    }
+                  },
                   child: Text(
                       "BOOK A LECTURE WITH ${selectedTeacher.name!.toUpperCase()} NOW!"),
                 ),

@@ -2,6 +2,7 @@
 //import 'package:doctor/screens/main/main_screen.dart';
 import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/models/AuthResponse.dart';
+import 'package:booking_lecture/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
@@ -52,6 +53,17 @@ class SignInForm extends StatelessWidget {
                   _formKey.currentState!.save();
                   AuthResponse authResponse = await authController.login(
                       _usernameController.text, _passwordController.text);
+
+                  if (authResponse.authError == "") {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => DashBoard()),
+                        (Route route) => false);
+                  } else {
+                    Get.snackbar(
+                        "Authentication Error", authResponse!.authError,
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: primaryColor);
+                  }
                 }
               },
               child: Text("Sign In"),

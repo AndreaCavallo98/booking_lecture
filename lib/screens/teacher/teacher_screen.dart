@@ -37,12 +37,23 @@ class _TeacherScreenState extends State<TeacherScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              children: [
-                const CustomAppBar(text: "Teachers", title: "All"),
-                Padding(
+        child: NestedScrollView(
+          headerSliverBuilder: ((context, innerBoxIsScrolled) => [
+                //const CustomAppBar(text: "Teachers", title: "All"),
+                SliverAppBar(
+                  backgroundColor: Colors.white,
+                  //title: Text("PROVAAAAAAA"),
+                  expandedHeight: 80,
+                  flexibleSpace:
+                      const CustomAppBar(text: "Teachers", title: "All"),
+                ),
+              ]),
+          body: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                height: 100,
+                child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
                   child: TextField(
                     controller: searchController,
@@ -59,7 +70,9 @@ class _TeacherScreenState extends State<TeacherScreen> {
                     }),
                   ),
                 ),
-                Padding(
+              ),
+              Expanded(
+                child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
                   child: Obx(() => teacherController.isLoading.value
                       ? const Center(
@@ -73,7 +86,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             )
                           : GridView.builder(
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              //physics: const NeverScrollableScrollPhysics(),
                               itemCount:
                                   teacherController.getTeacherList().length,
                               gridDelegate:
@@ -97,8 +110,8 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               ),
                             )),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

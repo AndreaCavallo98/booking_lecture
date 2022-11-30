@@ -3,12 +3,15 @@
 import 'dart:convert';
 
 import 'package:booking_lecture/constants.dart';
+import 'package:booking_lecture/controller/auth_controller.dart';
+import 'package:booking_lecture/controller/booking_controller.dart';
 import 'package:booking_lecture/controller/calendar_controller.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../controller/nav_bar_controller.dart';
 import '../../models/Course.dart';
 import '../../models/Teacher.dart';
 import '../dashboard/dashboard_screen.dart';
@@ -26,6 +29,9 @@ class BookingScreen extends StatefulWidget {
 class _BookingScreenState extends State<BookingScreen> {
   var formatter = new DateFormat('dd/MM/yyyy');
   CalendarController calendarController = Get.put(CalendarController());
+  BookingController bookingController = Get.find();
+  AuthController authController = Get.find();
+  NavBarController navBarController = Get.find();
   int selectedSloats = -1;
   int? selectedCourse;
 
@@ -84,7 +90,6 @@ class _BookingScreenState extends State<BookingScreen> {
               onChanged: (value) {
                 setState(() {
                   selectedCourse = value!;
-                  print(selectedCourse);
                 });
               },
               //validator: RequiredValidator(errorText: requiredField),
@@ -124,7 +129,7 @@ class _BookingScreenState extends State<BookingScreen> {
             ),
           ),
           Obx(() => calendarController.isLoading.value
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
               : Padding(
@@ -133,7 +138,8 @@ class _BookingScreenState extends State<BookingScreen> {
                   child: GridView.builder(
                     shrinkWrap: true,
                     itemCount: calendarController.dailyBookingSoltList.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       childAspectRatio: 2.77,
                       mainAxisSpacing: defaultPadding,
@@ -143,7 +149,6 @@ class _BookingScreenState extends State<BookingScreen> {
                       onTap: () {
                         setState(() {
                           selectedSloats = index;
-                          print(selectedSloats);
                         });
                       },
                       child: Container(
@@ -193,37 +198,48 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           Get.defaultDialog(
-                            title: "",
-                            content: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(defaultPadding),
-                                  child: Text(
-                                    "THE LECTURE WILL BE REGISTERED!",
-                                    style: TextStyle(
-                                        color: primaryColor,
-                                        fontWeight: FontWeight.bold),
+                              title: "THE LECTURE WILL BE REGISTERED!",
+                              titleStyle: TextStyle(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                              content: Column(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.all(defaultPadding),
+                                    child: Text(
+                                      "Will you book a lecture with Teacher ${widget.teacher.name} " +
+                                          "in date ${formatter.format(calendarController.selectedDateTime.value)} " +
+                                          "time slot:  ${calendarController.dailyBookingSoltList[selectedSloats].from} - "
+                                              "${calendarController.dailyBookingSoltList[selectedSloats].to} ",
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(defaultPadding),
-                                  child: Text(
-                                    "Will you book a lecture of ${selectedCourse} " +
-                                        "with Teacher ${widget.teacher.name} " +
-                                        "in date ${formatter.format(calendarController.selectedDateTime.value)} " +
-                                        "at time ${calendarController.dailyBookingSoltList[selectedSloats].from} - "
-                                            "${calendarController.dailyBookingSoltList[selectedSloats].to} ",
-                                  ),
-                                )
-                              ],
-                            ),
-                            textCancel: "NO",
-                            textConfirm: "YES",
-                            barrierDismissible: false,
-                            confirmTextColor: textColor,
-                            cancelTextColor: textColor,
-                            buttonColor: primaryColor,
-                          );
+                                ],
+                              ),
+                              textCancel: "NO",
+                              textConfirm: "YES",
+                              barrierDismissible: false,
+                              confirmTextColor: Colors.white,
+                              cancelTextColor: textColor,
+                              buttonColor: primaryColor,
+                              onConfirm: () {
+                                bookingController.addBooking(
+                                  selectedCourse!,
+                                  widget.teacher.id!,
+                                  authController.authId,
+                                  formatter.format(calendarController
+                                      .selectedDateTime.value),
+                                  15 + selectedSloats,
+                                  15 + selectedSloats + 1,
+                                );
+
+                                navBarController.selectedIndex.value = 2;
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => DashBoard()),
+                                    (Route route) => false);
+                              });
                         },
                         child: Text("Confirm  Booking"),
                       ),

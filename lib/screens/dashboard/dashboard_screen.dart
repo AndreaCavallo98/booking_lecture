@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import '../../constants.dart';
+import '../../controller/booking_controller.dart';
+import '../booking/my_booking_screen.dart';
 import '../home/home_screen.dart';
 
 class DashBoard extends StatelessWidget {
@@ -15,12 +17,13 @@ class DashBoard extends StatelessWidget {
 
   NavBarController navBarController = Get.find();
   TeacherController teacherController = Get.put(TeacherController());
+  BookingController bookingController = Get.put(BookingController());
   AuthController authController = Get.find();
 
   final List<Widget> _pages = [
     HomePage(),
     const TeacherScreen(),
-    Container(),
+    MyBookingScreen(),
     Container()
   ];
 

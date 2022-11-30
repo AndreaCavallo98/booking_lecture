@@ -7,4 +7,8 @@ class GetStorageManager {
   static String? getToken() {
     return _box.read("jwtToken") != null ? _box.read("jwtToken") : null;
   }
+
+  static int? getUserId() {
+    return _box.read("authId") != null ? _box.read("authId") : null;
+  }
 }

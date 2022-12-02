@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 
 class BookingController extends GetxController {
   var isLoading = false.obs;
-  List<Booking> myBookingList = <Booking>[].obs;
+  //List<Booking> myBookingList = <Booking>[].obs;
+  List<Booking> myBookingListNoObs = <Booking>[];
 
   addBooking(int courseId, int teacherId, int userId, String date,
       int startTime, int endTime) async {
@@ -73,7 +74,7 @@ class BookingController extends GetxController {
         if (response.statusCode != 401) {
           if (response.statusCode == 200) {
             var result = jsonDecode(response.body);
-            myBookingList =
+            myBookingListNoObs =
                 List.from(result).map((e) => Booking.fromJson(e)).toList();
           } else {
             print("Error while fatching data");
@@ -96,7 +97,7 @@ class BookingController extends GetxController {
     }
 
     try {
-      isLoading(true);
+      //isLoading(true);
       // data to string
       http.Response response = await http.delete(
         Uri.tryParse(
@@ -117,15 +118,39 @@ class BookingController extends GetxController {
     } catch (e) {
       print("Error exception $e");
     } finally {
-      isLoading(false);
+      //isLoading(false);
+    }
+  }
+
+  markAsDoneBooking(int bookingId) async {
+    String? jwtToken = GetStorageManager.getToken();
+    if (jwtToken == null) {
+      //authController.logout();
     }
 
-    myBookingList[
-            myBookingList.indexWhere((element) => element.id == bookingId)]
-        .deleted = true;
+    try {
+      //isLoading(true);
+      // data to string
+      http.Response response = await http.put(
+        Uri.tryParse(
+            //'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletCourse')!);
+            'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
+        headers: {"Authorization": "$jwtToken"},
+      );
 
-    //myBookingList.reactive();
-
-    //myBookingList.refresh();
+      if (response.statusCode != 401) {
+        if (response.statusCode == 200) {
+          print("booking confirmed");
+        } else {
+          print("Error while fatching data");
+        }
+      } else {
+        //authController.logout();
+      }
+    } catch (e) {
+      print("Error exception $e");
+    } finally {
+      //isLoading(false);
+    }
   }
 }

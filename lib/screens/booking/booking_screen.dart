@@ -10,6 +10,7 @@ import 'package:booking_lecture/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../controller/nav_bar_controller.dart';
 import '../../models/Course.dart';
@@ -198,13 +199,29 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           Get.defaultDialog(
-                              title: "THE LECTURE WILL BE REGISTERED!",
+                              title: "",
                               titleStyle: TextStyle(
-                                  color: primaryColor,
+                                  color: Colors.greenAccent,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18),
                               content: Column(
                                 children: [
+                                  Container(
+                                    height: 160,
+                                    width: 150,
+                                    child: Lottie.network(
+                                        fit: BoxFit.fill,
+                                        'https://assets4.lottiefiles.com/packages/lf20_cjoombb4.json'),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(defaultPadding),
+                                    child: Text(
+                                      "THE LECTURE WILL BE REGISTERED!",
+                                      style: TextStyle(
+                                          color: Colors.greenAccent,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.all(defaultPadding),
@@ -222,7 +239,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               barrierDismissible: false,
                               confirmTextColor: Colors.white,
                               cancelTextColor: textColor,
-                              buttonColor: primaryColor,
+                              buttonColor: Colors.greenAccent,
                               onConfirm: () async {
                                 await bookingController.addBooking(
                                   selectedCourse!,

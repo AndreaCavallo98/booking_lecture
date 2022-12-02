@@ -75,7 +75,6 @@ class BookingController extends GetxController {
             var result = jsonDecode(response.body);
             myBookingList =
                 List.from(result).map((e) => Booking.fromJson(e)).toList();
-            print(myBookingList);
           } else {
             print("Error while fatching data");
           }
@@ -88,5 +87,45 @@ class BookingController extends GetxController {
         isLoading(false);
       }
     }
+  }
+
+  deleteBooking(int bookingId) async {
+    String? jwtToken = GetStorageManager.getToken();
+    if (jwtToken == null) {
+      //authController.logout();
+    }
+
+    try {
+      isLoading(true);
+      // data to string
+      http.Response response = await http.delete(
+        Uri.tryParse(
+            //'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletCourse')!);
+            'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
+        headers: {"Authorization": "$jwtToken"},
+      );
+
+      if (response.statusCode != 401) {
+        if (response.statusCode == 200) {
+          print("booking deleted");
+        } else {
+          print("Error while fatching data");
+        }
+      } else {
+        //authController.logout();
+      }
+    } catch (e) {
+      print("Error exception $e");
+    } finally {
+      isLoading(false);
+    }
+
+    myBookingList[
+            myBookingList.indexWhere((element) => element.id == bookingId)]
+        .deleted = true;
+
+    //myBookingList.reactive();
+
+    //myBookingList.refresh();
   }
 }

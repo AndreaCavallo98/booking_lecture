@@ -223,8 +223,8 @@ class _BookingScreenState extends State<BookingScreen> {
                               confirmTextColor: Colors.white,
                               cancelTextColor: textColor,
                               buttonColor: primaryColor,
-                              onConfirm: () {
-                                bookingController.addBooking(
+                              onConfirm: () async {
+                                await bookingController.addBooking(
                                   selectedCourse!,
                                   widget.teacher.id!,
                                   authController.authId,

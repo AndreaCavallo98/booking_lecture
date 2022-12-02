@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-const primaryColor = Color.fromARGB(255, 214, 131, 37);
+const primaryColor = Color(0xFFD68325);
 const textColor = Color(0xFF35364F);
 const backgroundColor = Color(0xFFE6EFF9);
 const redColor = Color(0xFFE85050);

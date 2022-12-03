@@ -90,6 +90,16 @@ class BookingController extends GetxController {
     }
   }
 
+  List<Booking> getMyBookingList(bool showDeleted, bool showArchivied) {
+    return myBookingListNoObs
+        .where(
+            (element) => showDeleted ? element.deleted == !showDeleted : true)
+        .toList()
+        .where((element) =>
+            showArchivied ? element.has_review == !showArchivied : true)
+        .toList();
+  }
+
   deleteBooking(int bookingId) async {
     String? jwtToken = GetStorageManager.getToken();
     if (jwtToken == null) {

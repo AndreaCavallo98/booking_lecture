@@ -186,14 +186,3 @@ class _SearchFormState extends State<SearchForm> {
     );
   }
 }
-
-var currencies = [
-  "Food",
-  "Transport",
-  "Personal",
-  "Shopping",
-  "Medical",
-  "Rent",
-  "Movie",
-  "Salary"
-];

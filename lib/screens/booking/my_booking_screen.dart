@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:booking_lecture/controller/booking_controller.dart';
 import 'package:booking_lecture/main.dart';
+import 'package:booking_lecture/screens/review/review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../constants.dart';
+import '../../models/Booking.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../search/search_screen.dart';
 
 class MyBookingScreen extends StatefulWidget {
   const MyBookingScreen({Key? key}) : super(key: key);
@@ -21,13 +24,18 @@ class MyBookingScreen extends StatefulWidget {
 
 class _MyBookingScreenState extends State<MyBookingScreen> {
   BookingController bookingController = Get.find();
+  List<Booking> myBookingList = <Booking>[];
   var formatter = new DateFormat('dd/MM/yyyy');
+  bool hideDeleted = true;
+  bool hideArchived = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      bookingController.getMyBookings();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await bookingController.getMyBookings();
+      myBookingList =
+          bookingController.getMyBookingList(hideDeleted, hideArchived);
     });
   }
 
@@ -36,6 +44,51 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("My Bookings"),
+          actions: [
+            Row(
+              children: [
+                TextButton.icon(
+                  icon: Icon(
+                    Icons.delete,
+                    color: hideDeleted ? Colors.grey : Colors.red,
+                  ),
+                  label: Text(
+                    'deleted',
+                    style: TextStyle(
+                        color: hideDeleted ? Colors.grey : Colors.red),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      hideDeleted = !hideDeleted;
+                      myBookingList = bookingController.getMyBookingList(
+                          hideDeleted, hideArchived);
+                    });
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
+                  child: TextButton.icon(
+                    icon: Icon(
+                      Icons.history_outlined,
+                      color: hideArchived ? Colors.grey : Colors.green,
+                    ),
+                    label: Text(
+                      'archived',
+                      style: TextStyle(
+                          color: hideArchived ? Colors.grey : Colors.green),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        hideArchived = !hideArchived;
+                        myBookingList = bookingController.getMyBookingList(
+                            hideDeleted, hideArchived);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -45,7 +98,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : bookingController.myBookingListNoObs.isEmpty
+                  : myBookingList.isEmpty
                       ? Container(
                           child: const Center(
                               child: Text(
@@ -53,30 +106,26 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                         )
                       : Column(
                           children: List.generate(
-                            bookingController.myBookingListNoObs.length,
+                            myBookingList.length,
                             (index) => Padding(
                               padding:
                                   const EdgeInsets.only(bottom: defaultPadding),
                               child: Slidable(
-                                enabled: !bookingController
-                                        .myBookingListNoObs[index].deleted &&
-                                    !(bookingController
-                                            .myBookingListNoObs[index]
-                                            .confirmed &&
-                                        bookingController
-                                            .myBookingListNoObs[index]
-                                            .has_review),
+                                enabled: !myBookingList[index].deleted &&
+                                    !(myBookingList[index].confirmed &&
+                                        myBookingList[index].has_review),
                                 startActionPane: ActionPane(
                                   motion: const BehindMotion(),
-                                  children: bookingController
-                                              .myBookingListNoObs[index].date
+                                  children: myBookingList[index]
+                                              .date
+                                              .add(Duration(
+                                                  hours: myBookingList[index]
+                                                      .end_time))
                                               .compareTo(DateTime.now()) >
                                           0
                                       ? []
                                       : [
-                                          !bookingController
-                                                  .myBookingListNoObs[index]
-                                                  .confirmed
+                                          !myBookingList[index].confirmed
                                               ? SlidableAction(
                                                   backgroundColor: Colors.green
                                                       .withOpacity(0.75),
@@ -101,7 +150,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                                           .all(
                                                                       defaultPadding),
                                                               child: Text(
-                                                                  "You have finished the lesson with ${bookingController.myBookingListNoObs[index].teacher_name_surname}? Then you'll be able to review your teacher!"),
+                                                                  "You have finished the lesson with ${myBookingList[index].teacher_name_surname}? Then you'll be able to review your teacher!"),
                                                             ),
                                                           ],
                                                         ),
@@ -120,16 +169,14 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                         onConfirm: () async {
                                                           await bookingController
                                                               .markAsDoneBooking(
-                                                                  bookingController
-                                                                      .myBookingListNoObs[
+                                                                  myBookingList[
                                                                           index]
                                                                       .id);
 
                                                           setState(() {
-                                                            bookingController
-                                                                .myBookingListNoObs[
-                                                                    index]
-                                                                .confirmed = true;
+                                                            myBookingList[index]
+                                                                    .confirmed =
+                                                                true;
 
                                                             Get.back();
                                                             Get.snackbar(
@@ -147,16 +194,24 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                   },
                                                 )
                                               : Container(),
-                                          bookingController
-                                                  .myBookingListNoObs[index]
-                                                  .confirmed
+                                          myBookingList[index].confirmed
                                               ? SlidableAction(
-                                                  backgroundColor: primaryColor
-                                                      .withOpacity(0.8),
+                                                  backgroundColor: Colors.white,
+                                                  foregroundColor:
+                                                      Colors.orange,
                                                   icon: Icons.star,
-                                                  label: "review",
+                                                  label: "write review",
                                                   onPressed: (context) => {
-                                                    // => TO DO: review lecture
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ReviewScreen(
+                                                                booking:
+                                                                    myBookingList[
+                                                                        index]),
+                                                      ),
+                                                    ),
                                                   },
                                                 )
                                               : Container()
@@ -164,8 +219,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 ),
                                 endActionPane: ActionPane(
                                   motion: const BehindMotion(),
-                                  children: bookingController
-                                          .myBookingListNoObs[index].confirmed
+                                  children: myBookingList[index].confirmed
                                       ? []
                                       : [
                                           SlidableAction(
@@ -207,16 +261,18 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                   onConfirm: () async {
                                                     await bookingController
                                                         .deleteBooking(
-                                                            bookingController
-                                                                .myBookingListNoObs[
-                                                                    index]
+                                                            myBookingList[index]
                                                                 .id);
 
                                                     setState(() {
-                                                      bookingController
-                                                          .myBookingListNoObs[
-                                                              index]
+                                                      myBookingList[index]
                                                           .deleted = true;
+
+                                                      myBookingList =
+                                                          bookingController
+                                                              .getMyBookingList(
+                                                                  hideDeleted,
+                                                                  hideArchived);
 
                                                       Get.back();
                                                       Get.snackbar(
@@ -235,41 +291,29 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                         ],
                                 ),
                                 child: Opacity(
-                                  opacity: bookingController
-                                              .myBookingListNoObs[index]
-                                              .deleted ||
-                                          (bookingController
-                                                  .myBookingListNoObs[index]
-                                                  .confirmed &&
-                                              bookingController
-                                                  .myBookingListNoObs[index]
-                                                  .has_review)
-                                      ? 0.7
+                                  opacity: myBookingList[index].deleted ||
+                                          (myBookingList[index].confirmed &&
+                                              myBookingList[index].has_review)
+                                      ? 0.6
                                       : 1,
                                   child: Container(
                                     padding: EdgeInsets.all(defaultPadding),
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 5,
-                                          blurRadius: 7,
+                                          color: myBookingList[index].confirmed
+                                              ? Colors.green.withOpacity(0.5)
+                                              : myBookingList[index].deleted
+                                                  ? Colors.red.withOpacity(0.5)
+                                                  : Colors.grey
+                                                      .withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 2,
                                           offset: Offset(0,
-                                              3), // changes position of shadow
+                                              1), // changes position of shadow
                                         ),
                                       ],
-                                      color: /*bookingController
-                                              .myBookingListNoObs[index].deleted
-                                          ? Color.fromARGB(255, 229, 123, 116)
-                                              .withOpacity(0.3)
-                                          : bookingController
-                                                  .myBookingListNoObs[index]
-                                                  .confirmed
-                                              ? Color.fromARGB(
-                                                      255, 141, 240, 144)
-                                                  .withOpacity(0.3)
-                                              :*/
-                                          Colors.white,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(defaultPadding / 2)),
                                     ),
@@ -281,21 +325,18 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                               child: buildAppointmentInfo(
                                                   "Date",
                                                   formatter.format(
-                                                      bookingController
-                                                          .myBookingListNoObs[
-                                                              index]
+                                                      myBookingList[index]
                                                           .date)),
                                             ),
                                             Expanded(
                                               child: buildAppointmentInfo(
                                                   "Time slot",
-                                                  "${bookingController.myBookingListNoObs[index].start_time} - ${bookingController.myBookingListNoObs[index].end_time}"),
+                                                  "${myBookingList[index].start_time} - ${myBookingList[index].end_time}"),
                                             ),
                                             Expanded(
                                               child: buildAppointmentInfo(
                                                   "Teacher",
-                                                  bookingController
-                                                      .myBookingListNoObs[index]
+                                                  myBookingList[index]
                                                       .teacher_name_surname),
                                             ),
                                           ],
@@ -310,10 +351,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                               child: Badge(
                                                 toAnimate: false,
                                                 shape: BadgeShape.square,
-                                                badgeColor: (bookingController
-                                                    .myBookingListNoObs[index]
-                                                    .course_color
-                                                    .toColor()),
+                                                badgeColor:
+                                                    (myBookingList[index]
+                                                        .course_color
+                                                        .toColor()),
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 badgeContent: Padding(
@@ -321,9 +362,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                       const EdgeInsets.all(8.0),
                                                   child: Center(
                                                     child: Text(
-                                                        bookingController
-                                                            .myBookingListNoObs[
-                                                                index]
+                                                        myBookingList[index]
                                                             .course_title,
                                                         style: const TextStyle(
                                                             color: Colors.white,
@@ -343,42 +382,38 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Icon(
-                                                    bookingController
-                                                            .myBookingListNoObs[
-                                                                index]
-                                                            .deleted
+                                                    myBookingList[index].deleted
                                                         ? Icons.delete
-                                                        : bookingController
-                                                                .myBookingListNoObs[
-                                                                    index]
+                                                        : myBookingList[index]
                                                                 .has_review
                                                             ? Icons.star
-                                                            : Icons
-                                                                .star_outline_outlined,
-                                                    color: bookingController
-                                                            .myBookingListNoObs[
-                                                                index]
+                                                            : !myBookingList[
+                                                                        index]
+                                                                    .confirmed
+                                                                ? Icons
+                                                                    .watch_later_outlined
+                                                                : Icons
+                                                                    .star_outline_outlined,
+                                                    color: myBookingList[index]
                                                             .has_review
                                                         ? Color.fromARGB(
                                                             255, 239, 168, 74)
-                                                        : bookingController
-                                                                .myBookingListNoObs[
-                                                                    index]
+                                                        : myBookingList[index]
                                                                 .deleted
                                                             ? Colors.red
                                                             : Colors.black,
                                                   ),
-                                                  Text(bookingController
-                                                          .myBookingListNoObs[
-                                                              index]
+                                                  Text(myBookingList[index]
                                                           .deleted
                                                       ? "Deleted"
-                                                      : bookingController
-                                                              .myBookingListNoObs[
-                                                                  index]
+                                                      : myBookingList[index]
                                                               .has_review
                                                           ? "Reviewed"
-                                                          : "missing review"),
+                                                          : !myBookingList[
+                                                                      index]
+                                                                  .confirmed
+                                                              ? " Pending..."
+                                                              : "missing review"),
                                                 ],
                                               ),
                                             ),

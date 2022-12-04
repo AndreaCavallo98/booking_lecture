@@ -11,20 +11,27 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:lottie/lottie.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import '../../../constants.dart';
+import '../../../models/Booking.dart';
+import '../../dashboard/dashboard_screen.dart';
 
 class ReviewForm extends StatefulWidget {
   const ReviewForm({
     Key? key,
+    required this.booking,
   }) : super(key: key);
+
+  final Booking booking;
 
   @override
   State<ReviewForm> createState() => _ReviewFormState();
 }
 
 class _ReviewFormState extends State<ReviewForm> {
+  ReviewController reviewController = Get.put(ReviewController());
   TextEditingController _reviewTitleController = TextEditingController();
   TextEditingController _reviewTextController = TextEditingController();
   double _ratingValue = 0;
@@ -37,7 +44,7 @@ class _ReviewFormState extends State<ReviewForm> {
         children: [
           Center(
             child: Text(
-              "RATE TO",
+              "RATE TO ${widget.booking.teacher_name_surname.toUpperCase()}",
               style: Theme.of(context)
                   .textTheme
                   .headline6!
@@ -94,7 +101,54 @@ class _ReviewFormState extends State<ReviewForm> {
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: primaryColor.withOpacity(0.7),
                       colorText: Colors.white);
-                } else {}
+                } else {
+                  Get.defaultDialog(
+                      title: "",
+                      content: Column(
+                        children: [
+                          Container(
+                            height: 150,
+                            width: 200,
+                            child: Lottie.network(
+                                fit: BoxFit.fill,
+                                'https://assets4.lottiefiles.com/packages/lf20_MeTWrj.json'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(defaultPadding),
+                            child:
+                                Text("Do you want add this teacher's review?"),
+                          ),
+                        ],
+                      ),
+                      textCancel: "NO",
+                      textConfirm: "YES",
+                      barrierDismissible: false,
+                      confirmTextColor: Colors.green,
+                      cancelTextColor: textColor,
+                      buttonColor: Colors.green.withOpacity(0.5),
+                      onConfirm: () async {
+                        await reviewController.addReview(
+                            widget.booking.id,
+                            _ratingValue.toInt(),
+                            _reviewTitleController.text,
+                            _reviewTextController.text);
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => DashBoard()),
+                            (Route route) => false);
+
+                        /*setState(() {
+                          myBookingList[index].confirmed = true;
+
+                          Get.back();
+                          Get.snackbar("Lecture completed",
+                              "You have completed the lesson with your teacher",
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: Colors.green.withOpacity(0.5));
+                        });*/
+                      });
+                }
                 // Add review to database
 
                 // pop

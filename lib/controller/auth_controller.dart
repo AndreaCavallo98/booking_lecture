@@ -37,8 +37,8 @@ class AuthController extends GetxController {
       isLoading(true);
       http.Response response = await http.post(
         Uri.tryParse(
-            //'http://192.168.1.3:8080/Prenotazioni0_war_exploded/ServletTeacher?type=$type&courseid=$filterCourseId&avaliabledate=$filterDate&maxhourlyrate=$filterMaxHourlyRate')!);
-            'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            'http://192.168.1.8:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+        //'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
         body: {
           'username': username,
           'password': password,

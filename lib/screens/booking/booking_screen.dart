@@ -211,14 +211,14 @@ class _BookingScreenState extends State<BookingScreen> {
                                     width: 150,
                                     child: Lottie.network(
                                         fit: BoxFit.fill,
-                                        'https://assets4.lottiefiles.com/packages/lf20_cjoombb4.json'),
+                                        'https://assets2.lottiefiles.com/packages/lf20_zwkm4xbs.json'),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(defaultPadding),
                                     child: Text(
                                       "THE LECTURE WILL BE REGISTERED!",
                                       style: TextStyle(
-                                          color: Colors.greenAccent,
+                                          color: Colors.green,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -239,7 +239,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               barrierDismissible: false,
                               confirmTextColor: Colors.white,
                               cancelTextColor: textColor,
-                              buttonColor: Colors.greenAccent,
+                              buttonColor: Colors.green,
                               onConfirm: () async {
                                 await bookingController.addBooking(
                                   selectedCourse!,

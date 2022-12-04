@@ -106,7 +106,9 @@ class ReviewScreen extends StatelessWidget {
                   borderRadius:
                       BorderRadius.all(Radius.circular(defaultPadding / 2)),
                 ),
-                child: ReviewForm(),
+                child: ReviewForm(
+                  booking: booking,
+                ),
               )
             ],
           ),

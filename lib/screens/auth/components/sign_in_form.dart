@@ -59,8 +59,7 @@ class SignInForm extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => DashBoard()),
                         (Route route) => false);
                   } else {
-                    Get.snackbar(
-                        "Authentication Error", authResponse!.authError,
+                    Get.snackbar("Authentication Error", authResponse.authError,
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: primaryColor);
                   }

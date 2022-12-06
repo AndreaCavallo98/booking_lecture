@@ -24,8 +24,8 @@ class BookingController extends GetxController {
       // data to string
       http.Response response = await http.post(
         Uri.tryParse(
-            'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking')!,
-        //'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking')!,
+            //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking')!,
+            'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking')!,
         headers: {"Authorization": "$jwtToken"},
         body: {
           'courseid': courseId.toString(),
@@ -66,10 +66,9 @@ class BookingController extends GetxController {
     } else {
       try {
         isLoading(true);
-        http.Response response = await http.get(
-            Uri.tryParse(
-                'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking?userid=$userId')!,
-            //'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?userid=$userId')!,
+        http.Response response = await http.get(Uri.tryParse(
+                //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking?userid=$userId')!,
+                'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?userid=$userId')!,
             headers: {"Authorization": "$jwtToken"});
 
         if (response.statusCode != 401) {
@@ -112,8 +111,8 @@ class BookingController extends GetxController {
       // data to string
       http.Response response = await http.delete(
         Uri.tryParse(
-            'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
-        //'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
+            //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
+            'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
         headers: {"Authorization": "$jwtToken"},
       );
 
@@ -144,8 +143,8 @@ class BookingController extends GetxController {
       // data to string
       http.Response response = await http.put(
         Uri.tryParse(
-            'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
-        //'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
+            //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
+            'http://localhost:8080/Prenotazioni0_war_exploded/ServletBooking?bookingid=${bookingId.toString()}')!,
         headers: {"Authorization": "$jwtToken"},
       );
 

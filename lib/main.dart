@@ -1,3 +1,4 @@
+import 'package:booking_lecture/screens/auth/introduction_screen.dart';
 import 'package:booking_lecture/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,8 +8,12 @@ import 'app_theme.dart';
 import 'controller/auth_controller.dart';
 import 'screens/main/main_screen.dart';
 
+bool showIntroduction = true;
+
 void main() async {
-  await GetStorage.init();
+  var getStorage = await GetStorage.init();
+  final _box = GetStorage();
+  showIntroduction = _box.read("ON_BOARDING") ?? true;
   runApp(MyApp());
 }
 
@@ -34,7 +39,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: appTheme(context),
-      home: MainScreen(),
+      home: showIntroduction ? IntroScreen() : const MainScreen(),
     );
   }
 }

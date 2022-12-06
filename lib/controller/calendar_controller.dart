@@ -26,10 +26,9 @@ class CalendarController extends GetxController {
     try {
       isLoading(true);
       // data to string
-      http.Response response = await http.get(
-          Uri.tryParse(
-              'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
-          //'http://localhost:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
+      http.Response response = await http.get(Uri.tryParse(
+              //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
+              'http://localhost:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
           headers: {"Authorization": "$jwtToken"});
 
       if (response.statusCode != 401) {

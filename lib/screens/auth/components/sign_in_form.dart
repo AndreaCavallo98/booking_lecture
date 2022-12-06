@@ -49,15 +49,17 @@ class SignInForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
+                print("PREMUTO");
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
                   AuthResponse authResponse = await authController.login(
                       _usernameController.text, _passwordController.text);
 
                   if (authResponse.authError == "") {
-                    Navigator.of(context).pushAndRemoveUntil(
+                    /*Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => DashBoard()),
-                        (Route route) => false);
+                        (Route route) => false);*/
+                    // Navigator.of(context).pop();
                   } else {
                     Get.snackbar("Authentication Error", authResponse.authError,
                         snackPosition: SnackPosition.BOTTOM,

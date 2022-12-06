@@ -39,21 +39,21 @@ class TeacherDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (authController.jwtToken.value != "") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookingScreen(
-                            teacher: selectedTeacher,
-                          ),
+                    //if (authController.jwtToken.value != "") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookingScreen(
+                          teacher: selectedTeacher,
                         ),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignInScreen()),
-                      );
-                    }
+                      ),
+                    );
+                    //} else {
+                    //Navigator.push(
+                    //context,
+                    //MaterialPageRoute(builder: (context) => SignInScreen()),
+                    //);
+                    //}
                   },
                   child: Text(
                       "BOOK A LECTURE WITH ${selectedTeacher.name!.toUpperCase()} NOW!"),

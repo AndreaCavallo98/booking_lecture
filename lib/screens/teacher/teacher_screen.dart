@@ -43,7 +43,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                 SliverAppBar(
                   backgroundColor: Colors.white,
                   //title: Text("PROVAAAAAAA"),
-                  expandedHeight: 80,
+                  expandedHeight: 100,
                   flexibleSpace:
                       const CustomAppBar(text: "Teachers", title: "All"),
                 ),
@@ -52,7 +52,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
             children: [
               Container(
                 color: Colors.white,
-                height: 100,
+                height: 80,
                 child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
                   child: TextField(

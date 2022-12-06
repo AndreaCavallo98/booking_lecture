@@ -11,6 +11,7 @@ import '../../constants.dart';
 import '../../controller/booking_controller.dart';
 import '../booking/my_booking_screen.dart';
 import '../home/home_screen.dart';
+import '../profile/profile/profile_screen.dart';
 
 class DashBoard extends StatelessWidget {
   DashBoard({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class DashBoard extends StatelessWidget {
     HomePage(),
     const TeacherScreen(),
     MyBookingScreen(),
-    Container()
+    ProfileScreen()
   ];
 
   @override
@@ -68,20 +69,25 @@ class DashBoard extends StatelessWidget {
                   active: navBarController.selectedIndex.value == 2,
                 ),
                 GButton(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Image.asset(
+                      "assets/images/user_pic.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                  ),
                   icon: Icons.person,
                   text: 'Profile',
                   active: navBarController.selectedIndex.value == 3,
                 )
               ],
-              onTabChange: (pageNum) {
+              onTabChange: (pageNum) async {
                 navBarController.changePageIndex(pageNum);
                 teacherController.filterCourseId = -1;
                 teacherController.filterDate = "";
                 teacherController.filterMaxHourlyRate = 0;
                 teacherController.searchInput = "";
-                if (pageNum == 3) {
-                  authController.logout();
-                }
               },
             ),
           ),

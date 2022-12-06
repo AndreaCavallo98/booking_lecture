@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-
+    print("AAAOOOOO");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       authController.checkIfIsConnected();
     });
@@ -28,6 +28,13 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DashBoard();
+    return Obx(() => authController.isLoading.value
+        ? const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(child: CircularProgressIndicator()),
+          )
+        : authController.jwtToken == ""
+            ? SignInScreen()
+            : DashBoard());
   }
 }

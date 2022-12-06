@@ -21,7 +21,6 @@ class AuthController extends GetxController {
   AuthResponse? authResponse = null;
 
   checkIfIsConnected() {
-    print(_box.read("jwtToken"));
     if (_box.read("jwtToken") != null) {
       authId = _box.read("authId");
       authUsername = _box.read("authUsername");
@@ -37,8 +36,8 @@ class AuthController extends GetxController {
       isLoading(true);
       http.Response response = await http.post(
         Uri.tryParse(
-            'http://192.168.1.8:8080/Prenotazioni0_war_exploded/servlet-auth')!,
-        //'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
         body: {
           'username': username,
           'password': password,
@@ -58,10 +57,12 @@ class AuthController extends GetxController {
           _box.write("authImageName", authResponse!.authImageName);
           authId = authResponse!.authId;
           authUsername = authResponse!.authUsername;
-          jwtToken.value = authResponse!.jwtToken;
           authImageName = authResponse!.authImageName;
+          jwtToken.value = authResponse!.jwtToken;
+          isLoading(false);
           return authResponse!;
         } else {
+          isLoading(false);
           return authResponse!;
         }
       } else {
@@ -71,11 +72,10 @@ class AuthController extends GetxController {
       Get.snackbar("Error", e.toString());
     } finally {
       return authResponse!;
-      isLoading(false);
     }
   }
 
-  logout() {
+  logout() async {
     _box.erase();
     jwtToken.value = "";
     authId = -1;

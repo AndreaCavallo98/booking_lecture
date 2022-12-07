@@ -58,7 +58,7 @@ class _ReviewsState extends State<Reviews> {
                             reviewController.reviewList.length,
                             (index) => Container(
                                   width: 300,
-                                  height: 160,
+                                  height: 180,
                                   child: Padding(
                                       padding: const EdgeInsets.only(
                                         left: defaultPadding,
@@ -69,6 +69,8 @@ class _ReviewsState extends State<Reviews> {
                                             "${reviewController.reviewList[index].user_name} ${reviewController.reviewList[index].user_surname}",
                                         date: reviewController
                                             .reviewList[index].creation_date,
+                                        title: reviewController
+                                            .reviewList[index].title,
                                         comment: reviewController
                                             .reviewList[index].text,
                                         rating: reviewController

@@ -1,31 +1,42 @@
 import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../constants.dart';
+import '../../settings/settings_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   AuthController authController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: Text(
+          "Profile",
+          style: TextStyle(color: Get.isDarkMode ? Colors.white : textColor),
+        ),
         actions: [
           IconButton(
-            onPressed: () => authController
-                .logout() /*Navigator.push(
-              authController.logout();
-
-
+            onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => /*SettingsScreen()*/ Container(),
+                builder: (context) => SettingsScreen(),
               ),
-            )*/
-            ,
+            ),
             icon: Icon(
               Icons.settings,
               color: primaryColor,
@@ -51,29 +62,50 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
-                    initialValue: "Anwar Abir",
-                    decoration: inputDecoration.copyWith(hintText: "Name"),
+                    enabled: false,
+                    readOnly: true,
+                    initialValue: authController.nameUsername,
+                    decoration: inputDecoration.copyWith(
+                        labelText: "Name & Surname",
+                        fillColor: Get.isDarkMode
+                            ? Color.fromARGB(255, 34, 32, 32)
+                            : Colors.white,
+                        labelStyle: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1)),
                   ),
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: defaultPadding),
                     child: TextFormField(
-                      initialValue: "test@gmail.com",
-                      decoration: inputDecoration.copyWith(hintText: "Email"),
+                      enabled: false,
+                      readOnly: true,
+                      initialValue: authController.authUsername,
+                      decoration: inputDecoration.copyWith(
+                          fillColor: Get.isDarkMode
+                              ? Color.fromARGB(255, 34, 32, 32)
+                              : Colors.white,
+                          labelText: "Username",
+                          labelStyle: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1)),
                     ),
                   ),
                   TextFormField(
-                    initialValue: "+88019389898",
-                    decoration:
-                        inputDecoration.copyWith(hintText: "Phone Number"),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: defaultPadding),
-                    child: TextFormField(
-                      initialValue: "Rampura, Banasree",
-                      decoration: inputDecoration.copyWith(hintText: "Address"),
-                    ),
+                    enabled: false,
+                    readOnly: true,
+                    initialValue: authController.email,
+                    decoration: inputDecoration.copyWith(
+                        fillColor: Get.isDarkMode
+                            ? Color.fromARGB(255, 34, 32, 32)
+                            : Colors.white,
+                        labelText: "Email",
+                        labelStyle: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1)),
                   ),
                 ],
               ),

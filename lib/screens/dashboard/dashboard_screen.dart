@@ -35,7 +35,8 @@ class DashBoard extends StatelessWidget {
         body: _pages[navBarController.selectedIndex.value],
         bottomNavigationBar: Container(
           padding: EdgeInsets.all(defaultPadding),
-          color: Colors.white,
+          color:
+              Get.isDarkMode ? Color.fromARGB(255, 34, 32, 32) : Colors.white,
           child: SafeArea(
             child: GNav(
               haptic: true,
@@ -43,7 +44,9 @@ class DashBoard extends StatelessWidget {
               curve: Curves.ease,
               duration: Duration(milliseconds: 350),
               gap: 8,
-              color: Colors.grey[800],
+              color: Get.isDarkMode
+                  ? Color.fromARGB(255, 189, 183, 183)
+                  : Colors.grey[800],
               activeColor: Colors.white,
               iconSize: 24,
               selectedIndex: navBarController.selectedIndex.value,

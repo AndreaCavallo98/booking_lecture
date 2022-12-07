@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 
-ThemeData appTheme(BuildContext context) {
+ThemeData appThemeDark(BuildContext context) {
   return ThemeData(
+    brightness: Brightness.dark,
     primaryColor: primaryColor,
     scaffoldBackgroundColor: backgroundColor,
     textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom()),

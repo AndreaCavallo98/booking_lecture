@@ -3,6 +3,7 @@ import 'package:booking_lecture/main.dart';
 import 'package:booking_lecture/models/Teacher.dart';
 import 'package:booking_lecture/screens/details/teacher_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:string_to_hex/string_to_hex.dart';
 
 import '../constants.dart';
@@ -32,7 +33,8 @@ class TopFiveTeacherCard extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(defaultPadding),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color:
+                Get.isDarkMode ? Color.fromARGB(255, 34, 32, 32) : Colors.white,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
           ),
           child: Row(

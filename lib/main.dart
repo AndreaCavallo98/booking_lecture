@@ -1,10 +1,12 @@
 import 'package:booking_lecture/screens/auth/introduction_screen.dart';
 import 'package:booking_lecture/screens/dashboard/dashboard_screen.dart';
+import 'package:booking_lecture/services/theme_services.dart';
+import 'package:booking_lecture/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import 'app_theme.dart';
+import 'app_theme_dark.dart';
 import 'controller/auth_controller.dart';
 import 'screens/main/main_screen.dart';
 
@@ -38,7 +40,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
-      theme: appTheme(context),
+      theme: Themes.light,
+      themeMode: ThemeService().theme,
+      darkTheme: Themes.dark,
+      debugShowCheckedModeBanner: false,
       home: showIntroduction ? IntroScreen() : const MainScreen(),
     );
   }

@@ -60,7 +60,7 @@ class IntroScreen extends StatelessWidget {
           child: IntroductionScreen(
             pages: pages,
             dotsDecorator: const DotsDecorator(
-                size: Size(15, 15),
+                size: Size(10, 10),
                 color: textColor,
                 activeSize: Size.square(20),
                 activeColor: primaryColor),

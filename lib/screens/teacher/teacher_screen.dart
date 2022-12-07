@@ -41,7 +41,9 @@ class _TeacherScreenState extends State<TeacherScreen> {
           headerSliverBuilder: ((context, innerBoxIsScrolled) => [
                 //const CustomAppBar(text: "Teachers", title: "All"),
                 SliverAppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Get.isDarkMode
+                      ? Color.fromARGB(255, 34, 32, 32)
+                      : Colors.white,
                   //title: Text("PROVAAAAAAA"),
                   expandedHeight: 100,
                   flexibleSpace:
@@ -51,7 +53,9 @@ class _TeacherScreenState extends State<TeacherScreen> {
           body: Column(
             children: [
               Container(
-                color: Colors.white,
+                color: Get.isDarkMode
+                    ? Color.fromARGB(255, 34, 32, 32)
+                    : Colors.white,
                 height: 80,
                 child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),

@@ -14,7 +14,9 @@ class AuthController extends GetxController {
   NavBarController navBarController = Get.put(NavBarController());
 
   var authId = -1;
+  var nameUsername = "";
   var authUsername = "";
+  var email = "";
   var jwtToken = "".obs;
   var authImageName = "";
 
@@ -23,7 +25,9 @@ class AuthController extends GetxController {
   checkIfIsConnected() {
     if (_box.read("jwtToken") != null) {
       authId = _box.read("authId");
+      nameUsername = _box.read("nameUsername");
       authUsername = _box.read("authUsername");
+      email = _box.read("email");
       jwtToken.value = _box.read("jwtToken");
       authImageName = _box.read("authImageName");
     }
@@ -36,8 +40,8 @@ class AuthController extends GetxController {
       isLoading(true);
       http.Response response = await http.post(
         Uri.tryParse(
-            //'http://192.168.1.8:8080/Prenotazioni0_war_exploded/servlet-auth')!,
-            'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            'http://192.168.1.85:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+        //'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
         body: {
           'username': username,
           'password': password,
@@ -52,11 +56,15 @@ class AuthController extends GetxController {
         if (authResponse!.authError == "") {
           navBarController.selectedIndex.value = 0;
           _box.write("authId", authResponse!.authId);
+          _box.write("nameUsername", authResponse!.nameUsername);
           _box.write("authUsername", authResponse!.authUsername);
+          _box.write("email", authResponse!.email);
           _box.write("jwtToken", authResponse!.jwtToken);
           _box.write("authImageName", authResponse!.authImageName);
           authId = authResponse!.authId;
+          nameUsername = authResponse!.nameUsername;
           authUsername = authResponse!.authUsername;
+          email = authResponse!.email;
           authImageName = authResponse!.authImageName;
           jwtToken.value = authResponse!.jwtToken;
           isLoading(false);
@@ -75,11 +83,18 @@ class AuthController extends GetxController {
     }
   }
 
-  logout() async {
-    _box.erase();
+  logout() {
+    _box.remove("authId");
+    _box.remove("nameUsername");
+    _box.remove("authUsername");
+    _box.remove("email");
+    _box.remove("jwtToken");
+    _box.remove("authImageName");
     jwtToken.value = "";
     authId = -1;
+    nameUsername = "";
     authUsername = "";
+    email = "";
     authImageName = "";
   }
 }

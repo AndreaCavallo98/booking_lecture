@@ -90,6 +90,9 @@ class _SearchFormState extends State<SearchForm> {
                     //validator: RequiredValidator(errorText: requiredField),
                     decoration: dropdownInputDecoration.copyWith(
                       hintText: "Select course",
+                      fillColor: Get.isDarkMode
+                          ? Color.fromARGB(255, 34, 32, 32)
+                          : Colors.white,
                     ),
                   ),
           ),
@@ -112,7 +115,9 @@ class _SearchFormState extends State<SearchForm> {
                   });
                 });
               },
-              color: Colors.white,
+              color: Get.isDarkMode
+                  ? Color.fromARGB(255, 34, 32, 32)
+                  : Colors.white,
               elevation: 0,
               padding: EdgeInsets.symmetric(
                   horizontal: 12, vertical: defaultPadding * 1.25),
@@ -124,7 +129,9 @@ class _SearchFormState extends State<SearchForm> {
                         ? "Avaliable in date..."
                         : _selectedDate,
                     style: TextStyle(
-                      color: textColor.withOpacity(0.7),
+                      color: Get.isDarkMode
+                          ? Colors.white
+                          : textColor.withOpacity(0.7),
                       fontSize: 15,
                     ),
                   ),
@@ -149,7 +156,9 @@ class _SearchFormState extends State<SearchForm> {
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Get.isDarkMode
+                  ? Color.fromARGB(255, 34, 32, 32)
+                  : Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(3)),
             ),
             child: Slider(

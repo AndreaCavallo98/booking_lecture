@@ -17,15 +17,11 @@ class SectionTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-        TextButton(
-          onPressed: pressOnSeeAll,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Text(
-            "See All",
-            style: TextStyle(color: textColor),
+            title,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
         ),
       ],

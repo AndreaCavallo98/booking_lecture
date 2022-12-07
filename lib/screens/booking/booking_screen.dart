@@ -7,6 +7,7 @@ import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/controller/booking_controller.dart';
 import 'package:booking_lecture/controller/calendar_controller.dart';
 import 'package:booking_lecture/main.dart';
+import 'package:booking_lecture/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +34,7 @@ class _BookingScreenState extends State<BookingScreen> {
   BookingController bookingController = Get.find();
   AuthController authController = Get.find();
   NavBarController navBarController = Get.find();
+  NotificationServices notificationServices = Get.find();
   int selectedSloats = -1;
   int? selectedCourse;
 
@@ -43,6 +45,10 @@ class _BookingScreenState extends State<BookingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       calendarController.changeSelectedDate(widget.teacher.id!, DateTime.now());
     });
+  }
+
+  int secondsBetween(DateTime from, DateTime to) {
+    return (to.difference(from).inSeconds);
   }
 
   @override
@@ -96,6 +102,9 @@ class _BookingScreenState extends State<BookingScreen> {
               //validator: RequiredValidator(errorText: requiredField),
               decoration: dropdownInputDecoration.copyWith(
                 hintText: "Select course",
+                fillColor: Get.isDarkMode
+                    ? Color.fromARGB(255, 34, 32, 32)
+                    : Colors.white,
               ),
             ),
           ),
@@ -159,7 +168,9 @@ class _BookingScreenState extends State<BookingScreen> {
                                   .dailyBookingSoltList[index].avaliable
                               ? selectedSloats == index
                                   ? primaryColor
-                                  : Colors.white
+                                  : Get.isDarkMode
+                                      ? Color.fromARGB(255, 34, 32, 32)
+                                      : Colors.white
                               : Colors.red,
                           borderRadius: BorderRadius.all(Radius.circular(6)),
                         ),
@@ -171,7 +182,9 @@ class _BookingScreenState extends State<BookingScreen> {
                               .copyWith(
                                   color: calendarController
                                           .dailyBookingSoltList[index].avaliable
-                                      ? textColor
+                                      ? Get.isDarkMode
+                                          ? Colors.white
+                                          : textColor
                                       : Colors.white),
                         ),
                       ),
@@ -241,7 +254,8 @@ class _BookingScreenState extends State<BookingScreen> {
                               cancelTextColor: textColor,
                               buttonColor: Colors.green,
                               onConfirm: () async {
-                                await bookingController.addBooking(
+                                int newBookingId =
+                                    await bookingController.addBooking(
                                   selectedCourse!,
                                   widget.teacher.id!,
                                   authController.authId,
@@ -252,6 +266,25 @@ class _BookingScreenState extends State<BookingScreen> {
                                 );
 
                                 navBarController.selectedIndex.value = 2;
+
+                                // Calculating seconds beetween today & half of haur before meeting starting
+                                DateTime bookingDate = calendarController
+                                    .selectedDateTime.value
+                                    .add(Duration(hours: 15 + selectedSloats));
+
+                                DateTime halfHourBeforeLecture =
+                                    bookingDate.subtract(Duration(minutes: 30));
+
+                                int showNotificationAfterSeconds =
+                                    secondsBetween(
+                                        DateTime.now(), halfHourBeforeLecture);
+
+                                notificationServices.showScheduleNotification(
+                                    id: newBookingId,
+                                    title: "Today lesson is about to begin!",
+                                    body:
+                                        "we remind you that there is less than half an hour until your lesson with the teacher ${widget.teacher.name} begins. Details -> DATE: ${formatter.format(calendarController.selectedDateTime.value)} SLOT TIME: ${calendarController.dailyBookingSoltList[selectedSloats].from} - ${calendarController.dailyBookingSoltList[selectedSloats].to}. We wish you good learning!",
+                                    seconds: showNotificationAfterSeconds);
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                         builder: (context) => DashBoard()),

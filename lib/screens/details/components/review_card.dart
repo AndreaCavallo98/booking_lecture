@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReviewCard extends StatelessWidget {
-  final String image, name, date, comment;
+  final String image, name, date, title, comment;
   final int rating;
   //final Function onTap, onPressed;
   //final bool isLess;
@@ -13,6 +13,7 @@ class ReviewCard extends StatelessWidget {
     required this.image,
     required this.name,
     required this.date,
+    required this.title,
     required this.comment,
     required this.rating,
     //this.onTap,
@@ -71,11 +72,20 @@ class ReviewCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               Text(
-                comment +
-                    "dsfsdfdsfdsfsfsdfsdfsdfsdfsdfsdsdfsdfsdfsffnbshjchndnjsncshjncjsdncjsdncjsncjhsnchjsncjhsdncjhsncjshdcnjshncjhsdcnjfsdfdsfsdfsdfdssfsfsfsdfdhsbferbhjberjhvbjhdfbvdfbvjhhdfbvdfjh",
+                comment,
                 //overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.headline6,
+                style: TextStyle(fontSize: 15),
               ),
               // GestureDetector(
               //   onTap: onTap,
@@ -105,7 +115,8 @@ class ReviewCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(defaultPadding),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:
+              Get.isDarkMode ? Color.fromARGB(255, 34, 32, 32) : Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(12)),
         ),
         child: Column(
@@ -155,9 +166,18 @@ class ReviewCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Text(
-              comment +
-                  "dsfsdfdsfdsfsfsdfsdfsdfsdfsdfsdsdfsdfsdfsffnbshjchndnjsncshjncjsdncjsdncjsncjhsnchjsncjhsdncjhsncjshdcnjshncjhsdcnjfsdfdsfsdfsdfdssfsfsfsdfdhsbferbhjberjhvbjhdfbvdfbvjhhdfbvdfjh",
+              comment,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.caption,

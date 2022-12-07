@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:booking_lecture/constants.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/Booking.dart';
@@ -40,7 +41,9 @@ class ReviewScreen extends StatelessWidget {
                       offset: Offset(0, 1), // changes position of shadow
                     ),
                   ],
-                  color: Colors.white,
+                  color: Get.isDarkMode
+                      ? Color.fromARGB(255, 34, 32, 32)
+                      : Colors.white,
                   borderRadius:
                       BorderRadius.all(Radius.circular(defaultPadding / 2)),
                 ),
@@ -102,7 +105,9 @@ class ReviewScreen extends StatelessWidget {
                       offset: Offset(0, 1), // changes position of shadow
                     ),
                   ],
-                  color: Colors.white,
+                  color: Get.isDarkMode
+                      ? Color.fromARGB(255, 34, 32, 32)
+                      : Colors.white,
                   borderRadius:
                       BorderRadius.all(Radius.circular(defaultPadding / 2)),
                 ),

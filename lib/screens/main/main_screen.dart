@@ -1,5 +1,6 @@
 import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/screens/auth/sign_in_screen.dart';
+import 'package:booking_lecture/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,11 +17,15 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   AuthController authController = Get.put(AuthController());
+  late final NotificationServices notificationService;
 
   @override
   void initState() {
     super.initState();
-    print("AAAOOOOO");
+
+    notificationService = Get.put(NotificationServices());
+    notificationService.initialize();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       authController.checkIfIsConnected();
     });

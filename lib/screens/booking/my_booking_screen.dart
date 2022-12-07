@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../constants.dart';
 import '../../models/Booking.dart';
+import '../../services/notification_service.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../search/search_screen.dart';
 
@@ -25,6 +26,7 @@ class MyBookingScreen extends StatefulWidget {
 class _MyBookingScreenState extends State<MyBookingScreen> {
   BookingController bookingController = Get.find();
   List<Booking> myBookingList = <Booking>[];
+  NotificationServices notificationServices = Get.find();
   var formatter = new DateFormat('dd/MM/yyyy');
   bool hideDeleted = true;
   bool hideArchived = true;
@@ -33,7 +35,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await bookingController.getMyBookings();
+      await bookingController.getMyBookings("false");
       myBookingList =
           bookingController.getMyBookingList(hideDeleted, hideArchived);
     });
@@ -43,7 +45,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("My Bookings"),
+          title: Text(
+            "My Bookings",
+            style: TextStyle(color: Get.isDarkMode ? Colors.white : textColor),
+          ),
           actions: [
             Row(
               children: [
@@ -196,7 +201,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                               : Container(),
                                           myBookingList[index].confirmed
                                               ? SlidableAction(
-                                                  backgroundColor: Colors.white,
+                                                  backgroundColor:
+                                                      Get.isDarkMode
+                                                          ? Colors.black
+                                                          : Colors.white,
                                                   foregroundColor:
                                                       Colors.orange,
                                                   icon: Icons.star,
@@ -264,6 +272,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                             myBookingList[index]
                                                                 .id);
 
+                                                    notificationServices
+                                                        .cancelScheduleNotification(
+                                                            myBookingList[index]
+                                                                .id);
+
                                                     setState(() {
                                                       myBookingList[index]
                                                           .deleted = true;
@@ -313,7 +326,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                               1), // changes position of shadow
                                         ),
                                       ],
-                                      color: Colors.white,
+                                      color: Get.isDarkMode
+                                          ? Color.fromARGB(255, 34, 32, 32)
+                                          : Colors.white,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(defaultPadding / 2)),
                                     ),
@@ -353,8 +368,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                 shape: BadgeShape.square,
                                                 badgeColor:
                                                     (myBookingList[index]
-                                                        .course_color
-                                                        .toColor()),
+                                                            .course_color
+                                                            .toColor())
+                                                        .withOpacity(0.8),
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 badgeContent: Padding(

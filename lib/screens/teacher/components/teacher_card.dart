@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:booking_lecture/main.dart';
 import 'package:booking_lecture/models/Teacher.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../components/rating.dart';
 import '../../../constants.dart';
 
@@ -29,7 +30,8 @@ class _TeacherCardState extends State<TeacherCard> {
       child: Container(
         padding: EdgeInsets.all(defaultPadding),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:
+              Get.isDarkMode ? Color.fromARGB(255, 34, 32, 32) : Colors.white,
           borderRadius: const BorderRadius.all(
             Radius.circular(10),
           ),

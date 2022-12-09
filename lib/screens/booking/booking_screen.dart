@@ -7,6 +7,7 @@ import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/controller/booking_controller.dart';
 import 'package:booking_lecture/controller/calendar_controller.dart';
 import 'package:booking_lecture/main.dart';
+import 'package:booking_lecture/screens/main/main_screen.dart';
 import 'package:booking_lecture/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -142,55 +143,62 @@ class _BookingScreenState extends State<BookingScreen> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: defaultPadding),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: calendarController.dailyBookingSoltList.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 2.77,
-                      mainAxisSpacing: defaultPadding,
-                      crossAxisSpacing: defaultPadding,
-                    ),
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedSloats = index;
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: calendarController
-                                  .dailyBookingSoltList[index].avaliable
-                              ? selectedSloats == index
-                                  ? primaryColor
-                                  : Get.isDarkMode
-                                      ? Color.fromARGB(255, 34, 32, 32)
-                                      : Colors.white
-                              : Colors.red,
-                          borderRadius: BorderRadius.all(Radius.circular(6)),
+              : calendarController.dailyBookingSoltList.isEmpty
+                  ? const Center(
+                      child: Text("No slot available anymore for today"),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            calendarController.dailyBookingSoltList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 2.77,
+                          mainAxisSpacing: defaultPadding,
+                          crossAxisSpacing: defaultPadding,
                         ),
-                        child: Text(
-                          "${calendarController.dailyBookingSoltList[index].from.toString()} - ${calendarController.dailyBookingSoltList[index].to.toString()}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle2!
-                              .copyWith(
-                                  color: calendarController
-                                          .dailyBookingSoltList[index].avaliable
-                                      ? Get.isDarkMode
-                                          ? Colors.white
-                                          : textColor
-                                      : Colors.white),
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedSloats = index;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: calendarController
+                                      .dailyBookingSoltList[index].avaliable
+                                  ? selectedSloats == index
+                                      ? primaryColor
+                                      : Get.isDarkMode
+                                          ? Color.fromARGB(255, 34, 32, 32)
+                                          : Colors.white
+                                  : Colors.red,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6)),
+                            ),
+                            child: Text(
+                              "${calendarController.dailyBookingSoltList[index].from.toString()} - ${calendarController.dailyBookingSoltList[index].to.toString()}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2!
+                                  .copyWith(
+                                      color: calendarController
+                                              .dailyBookingSoltList[index]
+                                              .avaliable
+                                          ? Get.isDarkMode
+                                              ? Colors.white
+                                              : textColor
+                                          : Colors.white),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                )),
+                    )),
           Padding(
             padding: const EdgeInsets.only(
                 top: defaultPadding,
@@ -279,15 +287,26 @@ class _BookingScreenState extends State<BookingScreen> {
                                     secondsBetween(
                                         DateTime.now(), halfHourBeforeLecture);
 
-                                notificationServices.showScheduleNotification(
-                                    id: newBookingId,
-                                    title: "Today lesson is about to begin!",
-                                    body:
-                                        "we remind you that there is less than half an hour until your lesson with the teacher ${widget.teacher.name} begins. Details -> DATE: ${formatter.format(calendarController.selectedDateTime.value)} SLOT TIME: ${calendarController.dailyBookingSoltList[selectedSloats].from} - ${calendarController.dailyBookingSoltList[selectedSloats].to}. We wish you good learning!",
-                                    seconds: showNotificationAfterSeconds);
+                                // se manca più di mezz'ora all'inizio altrimenti non mandare notifica
+
+                                if (halfHourBeforeLecture
+                                        .compareTo(DateTime.now()) >
+                                    0) {
+                                  await notificationServices
+                                      .showScheduleNotification(
+                                          id: newBookingId,
+                                          title:
+                                              "Today lesson is about to begin!",
+                                          body:
+                                              "Hei ${authController.authUsername}! we remind you that there is less than half an hour until your lesson with the teacher ${widget.teacher.name} begins. Details -> DATE: ${formatter.format(calendarController.selectedDateTime.value)} SLOT TIME: ${calendarController.dailyBookingSoltList[selectedSloats].from} - ${calendarController.dailyBookingSoltList[selectedSloats].to}. We wish you good learning!",
+                                          seconds:
+                                              showNotificationAfterSeconds);
+                                }
+
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
-                                        builder: (context) => DashBoard()),
+                                        builder: (context) =>
+                                            const MainScreen()),
                                     (Route route) => false);
                               });
                         },

@@ -43,7 +43,7 @@ class _UpcomingLectureState extends State<UpcomingLecture> {
         Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: SectionTitle(
-            title: "today's booked lectures ",
+            title: "Today's booked lectures ",
             pressOnSeeAll: () {},
           ),
         ),
@@ -52,7 +52,7 @@ class _UpcomingLectureState extends State<UpcomingLecture> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : !bookingController.myBookingListNoObs.isEmpty
+              : bookingController.myBookingListNoObs.isEmpty
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

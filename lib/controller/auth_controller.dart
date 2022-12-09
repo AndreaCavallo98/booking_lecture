@@ -33,15 +33,66 @@ class AuthController extends GetxController {
     }
   }
 
-  // => Manage jwt authentication
+  Future<AuthResponse> register(String name, String surname, String username,
+      String email, String password) async {
+    try {
+      isLoading(true);
+      http.Response response = await http.post(
+        Uri.tryParse(
+            //'http://192.168.1.85:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth?action=register')!,
+        body: {
+          'name': name,
+          'surname': surname,
+          'username': username,
+          'email': email,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+
+        authResponse = AuthResponse.fromJson(result);
+
+        if (authResponse!.authError == "") {
+          navBarController.selectedIndex.value = 0;
+          _box.write("authId", authResponse!.authId);
+          _box.write("nameUsername", authResponse!.nameUsername);
+          _box.write("authUsername", authResponse!.authUsername);
+          _box.write("email", authResponse!.email);
+          _box.write("jwtToken", authResponse!.jwtToken);
+          _box.write("authImageName", authResponse!.authImageName);
+          authId = authResponse!.authId;
+          nameUsername = authResponse!.nameUsername;
+          authUsername = authResponse!.authUsername;
+          email = authResponse!.email;
+          authImageName = authResponse!.authImageName;
+          jwtToken.value = authResponse!.jwtToken;
+          isLoading(false);
+          return authResponse!;
+        } else {
+          isLoading(false);
+          return authResponse!;
+        }
+      } else {
+        Get.snackbar("Error", authResponse!.authError);
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading(false);
+      return authResponse!;
+    }
+  }
 
   Future<AuthResponse> login(String username, String password) async {
     try {
       isLoading(true);
       http.Response response = await http.post(
         Uri.tryParse(
-            'http://192.168.1.85:8080/Prenotazioni0_war_exploded/servlet-auth')!,
-        //'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            //'http://192.168.1.85:8080/Prenotazioni0_war_exploded/servlet-auth')!,
+            'http://localhost:8080/Prenotazioni0_war_exploded/servlet-auth?action=login')!,
         body: {
           'username': username,
           'password': password,
@@ -96,5 +147,7 @@ class AuthController extends GetxController {
     authUsername = "";
     email = "";
     authImageName = "";
+
+    // remove all
   }
 }

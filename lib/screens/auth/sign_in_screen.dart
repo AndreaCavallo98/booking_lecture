@@ -3,6 +3,7 @@ import 'package:booking_lecture/screens/auth/sign_up_screen.dart';
 import 'package:booking_lecture/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../constants.dart';
 import 'components/sign_in_form.dart';
@@ -24,8 +25,11 @@ class SignInScreen extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .headline4!
-                    .copyWith(fontWeight: FontWeight.bold),
+                    .copyWith(fontWeight: FontWeight.bold, color: primaryColor),
               ),
+              Container(
+                  child: Lottie.asset("assets/lottie/login_orange.json",
+                      fit: BoxFit.cover)),
               Row(
                 children: [
                   Text("Don’n have an account?"),

@@ -21,17 +21,17 @@ class CalendarController extends GetxController {
     ;
 
     String? jwtToken = GetStorageManager.getToken();
-    if (jwtToken == null) {
+
+    if (jwtToken == null || authController.authId == null) {
       authController.logout();
     }
 
     try {
       isLoading(true);
       // data to string
-      http.Response response = await http.get(
-          Uri.tryParse(
-              'http://192.168.1.85:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
-          //'http://localhost:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
+      http.Response response = await http.get(Uri.tryParse(
+              //'http://192.168.1.85:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
+              'http://localhost:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}&userid=${authController.authId}')!,
           headers: {"Authorization": "$jwtToken"});
 
       if (response.statusCode != 401) {

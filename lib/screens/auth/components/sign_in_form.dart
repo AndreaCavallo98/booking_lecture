@@ -49,7 +49,6 @@ class SignInForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                print("PREMUTO");
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
                   AuthResponse authResponse = await authController.login(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:booking_lecture/models/BookingSlot.dart';
 import 'package:booking_lecture/utils/GetStorageManager.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -31,7 +32,7 @@ class CalendarController extends GetxController {
       // data to string
       http.Response response = await http.get(Uri.tryParse(
               //'http://192.168.1.85:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}')!,
-              'http://localhost:8080/Prenotazioni0_war_exploded/ServletCalendar?teacherid=$teacherId&dateday=${formatter.format(selectedDate)}&userid=${authController.authId}')!,
+              'http://localhost:8080/Prenotazioni0_war_exploded/ServletCalendar?type=daily&teacherid=$teacherId&dateday=${formatter.format(selectedDate)}&userid=${authController.authId}')!,
           headers: {"Authorization": "$jwtToken"});
 
       if (response.statusCode != 401) {

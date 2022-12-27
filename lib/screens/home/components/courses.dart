@@ -100,7 +100,12 @@ class CourseCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset("assets/icons/Psychiatrist.svg"),
+              Icon(
+                Icons.menu_book_rounded,
+                color: Colors.white,
+                size: 35,
+              ),
+              //SvgPicture.asset("assets/icons/Psychiatrist.svg"),
               SizedBox(height: defaultPadding / 2),
               Text(
                 course.title ?? "",

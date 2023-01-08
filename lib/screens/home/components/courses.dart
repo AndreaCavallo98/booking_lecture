@@ -1,3 +1,4 @@
+import 'package:booking_lecture/components/custom_show_case_widget.dart';
 import 'package:booking_lecture/controller/course_controller.dart';
 import 'package:booking_lecture/controller/nav_bar_controller.dart';
 import 'package:booking_lecture/controller/teacher_controller.dart';
@@ -7,12 +8,15 @@ import 'package:booking_lecture/screens/teacher/teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../components/section_title.dart';
 import '../../../constants.dart';
 
 class Courses extends StatefulWidget {
+  GlobalKey keyShowCase;
   Courses({
+    required this.keyShowCase,
     Key? key,
   }) : super(key: key);
 
@@ -52,16 +56,20 @@ class _CoursesState extends State<Courses> {
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                : Row(
-                    children: List.generate(
-                      courseController.courseList.length,
-                      (index) => CourseCard(
-                        course: courseController.courseList[index],
-                        press: () {
-                          navBarController.changePageIndex(1);
-                          teacherController.filterCourseId =
-                              courseController.courseList[index].id!;
-                        },
+                : CustomShowCaseWidget(
+                    description: "Select course that you want to learn!",
+                    globalKey: widget.keyShowCase,
+                    child: Row(
+                      children: List.generate(
+                        courseController.courseList.length,
+                        (index) => CourseCard(
+                          course: courseController.courseList[index],
+                          press: () {
+                            navBarController.changePageIndex(1);
+                            teacherController.filterCourseId =
+                                courseController.courseList[index].id!;
+                          },
+                        ),
                       ),
                     ),
                   ),

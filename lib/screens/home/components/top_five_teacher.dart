@@ -1,3 +1,4 @@
+import 'package:booking_lecture/components/custom_show_case_widget.dart';
 import 'package:booking_lecture/components/top_five_teacher_card.dart';
 import 'package:booking_lecture/controller/teacher_controller.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,10 @@ import '../../../components/section_title.dart';
 import '../../../constants.dart';
 
 class TopFiveTeacher extends StatefulWidget {
-  const TopFiveTeacher({
+  GlobalKey keyShowCase;
+
+  TopFiveTeacher({
+    required this.keyShowCase,
     Key? key,
   }) : super(key: key);
 
@@ -45,13 +49,17 @@ class _TopFiveTeacherState extends State<TopFiveTeacher> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : Row(
-                    children: List.generate(
-                      teacherController.teacherList.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.only(left: defaultPadding),
-                        child: TopFiveTeacherCard(
-                          teacher: teacherController.teacherList[index],
+                : CustomShowCaseWidget(
+                    globalKey: widget.keyShowCase,
+                    description: "These are our 5 best teacher!",
+                    child: Row(
+                      children: List.generate(
+                        teacherController.teacherList.length,
+                        (index) => Padding(
+                          padding: const EdgeInsets.only(left: defaultPadding),
+                          child: TopFiveTeacherCard(
+                            teacher: teacherController.teacherList[index],
+                          ),
                         ),
                       ),
                     ),

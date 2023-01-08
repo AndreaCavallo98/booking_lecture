@@ -171,13 +171,24 @@ class _BookingScreenState extends State<BookingScreen> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: calendarController
-                                      .dailyBookingSoltList[index].avaliable
+                                          .dailyBookingSoltList[index].status ==
+                                      "free"
                                   ? selectedSloats == index
                                       ? primaryColor
                                       : Get.isDarkMode
                                           ? Color.fromARGB(255, 34, 32, 32)
                                           : Colors.white
-                                  : Colors.red,
+                                  : calendarController
+                                              .dailyBookingSoltList[index]
+                                              .status ==
+                                          "busy"
+                                      ? Colors.red
+                                      : calendarController
+                                                  .dailyBookingSoltList[index]
+                                                  .status ==
+                                              "booked"
+                                          ? Colors.lightBlue[200]
+                                          : Colors.grey[400],
                               borderRadius:
                                   BorderRadius.all(Radius.circular(6)),
                             ),
@@ -188,8 +199,9 @@ class _BookingScreenState extends State<BookingScreen> {
                                   .subtitle2!
                                   .copyWith(
                                       color: calendarController
-                                              .dailyBookingSoltList[index]
-                                              .avaliable
+                                                  .dailyBookingSoltList[index]
+                                                  .status ==
+                                              "free"
                                           ? Get.isDarkMode
                                               ? Colors.white
                                               : textColor
@@ -210,109 +222,132 @@ class _BookingScreenState extends State<BookingScreen> {
           ),
           Obx(() => calendarController.isLoading.value || selectedSloats == -1
               ? Container()
-              : !calendarController
-                      .dailyBookingSoltList[selectedSloats].avaliable
-                  ? Center(
+              : calendarController
+                          .dailyBookingSoltList[selectedSloats].status ==
+                      "busy"
+                  ? const Center(
                       child:
                           Text("Teacher isn't avaliable anymore in this slot"))
-                  : Padding(
-                      padding: const EdgeInsets.all(defaultPadding),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Get.defaultDialog(
-                              title: "",
-                              titleStyle: TextStyle(
-                                  color: Colors.greenAccent,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                              content: Column(
-                                children: [
-                                  Container(
-                                    height: 160,
-                                    width: 150,
-                                    child: Lottie.network(
-                                        fit: BoxFit.fill,
-                                        'https://assets2.lottiefiles.com/packages/lf20_zwkm4xbs.json'),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(defaultPadding),
-                                    child: Text(
-                                      "THE LECTURE WILL BE REGISTERED!",
-                                      style: TextStyle(
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.all(defaultPadding),
-                                    child: Text(
-                                      "Will you book a lecture with Teacher ${widget.teacher.name} " +
-                                          "in date ${formatter.format(calendarController.selectedDateTime.value)} " +
-                                          "time slot:  ${calendarController.dailyBookingSoltList[selectedSloats].from} - "
-                                              "${calendarController.dailyBookingSoltList[selectedSloats].to} ",
-                                    ),
-                                  ),
-                                ],
+                  : calendarController
+                              .dailyBookingSoltList[selectedSloats].status ==
+                          "booked"
+                      ? const Center(
+                          child: Text(
+                              "You have already booked a lecture for this time slot"))
+                      : calendarController.dailyBookingSoltList[selectedSloats]
+                                  .status ==
+                              "passed"
+                          ? const Center(
+                              child:
+                                  Text("This time slot isn't bookable anymore"))
+                          : Padding(
+                              padding: const EdgeInsets.all(defaultPadding),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Get.defaultDialog(
+                                      title: "",
+                                      titleStyle: const TextStyle(
+                                          color: Colors.greenAccent,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                      content: Column(
+                                        children: [
+                                          Container(
+                                            height: 160,
+                                            width: 150,
+                                            child: Lottie.network(
+                                                fit: BoxFit.fill,
+                                                'https://assets2.lottiefiles.com/packages/lf20_zwkm4xbs.json'),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.all(defaultPadding),
+                                            child: Text(
+                                              "THE LECTURE WILL BE REGISTERED!",
+                                              style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(
+                                                defaultPadding),
+                                            child: Text(
+                                              "Will you book a lecture with Teacher ${widget.teacher.name} " +
+                                                  "in date ${formatter.format(calendarController.selectedDateTime.value)} " +
+                                                  "time slot:  ${calendarController.dailyBookingSoltList[selectedSloats].from} - "
+                                                      "${calendarController.dailyBookingSoltList[selectedSloats].to} ",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      textCancel: "NO",
+                                      textConfirm: "YES",
+                                      barrierDismissible: false,
+                                      confirmTextColor: Colors.white,
+                                      cancelTextColor: textColor,
+                                      buttonColor: Colors.green,
+                                      onConfirm: () async {
+                                        int newBookingId =
+                                            await bookingController.addBooking(
+                                          selectedCourse!,
+                                          widget.teacher.id!,
+                                          authController.authId,
+                                          formatter.format(calendarController
+                                              .selectedDateTime.value),
+                                          15 + selectedSloats,
+                                          15 + selectedSloats + 1,
+                                        );
+
+                                        navBarController.selectedIndex.value =
+                                            2;
+
+                                        // Calculating seconds beetween today & half of haur before meeting starting
+                                        DateTime bookingDate =
+                                            calendarController
+                                                .selectedDateTime.value
+                                                .add(Duration(
+                                                    hours:
+                                                        15 + selectedSloats));
+
+                                        DateTime halfHourBeforeLecture =
+                                            bookingDate.subtract(
+                                                Duration(minutes: 30));
+
+                                        int showNotificationAfterSeconds =
+                                            secondsBetween(DateTime.now(),
+                                                halfHourBeforeLecture);
+
+                                        // se manca più di mezz'ora all'inizio altrimenti non mandare notifica
+
+                                        if (halfHourBeforeLecture
+                                                .compareTo(DateTime.now()) >
+                                            0) {
+                                          await notificationServices.showScheduleNotification(
+                                              id: newBookingId,
+                                              title:
+                                                  "Today lesson is about to begin!",
+                                              body:
+                                                  "Hei ${authController.authUsername}! we remind you that there is less than half an hour until your lesson with the teacher ${widget.teacher.name} begins. Details -> DATE: ${formatter.format(calendarController.selectedDateTime.value)} SLOT TIME: ${calendarController.dailyBookingSoltList[selectedSloats].from} - ${calendarController.dailyBookingSoltList[selectedSloats].to}. We wish you good learning!",
+                                              seconds:
+                                                  showNotificationAfterSeconds);
+                                        }
+
+                                        Future.delayed(
+                                            const Duration(milliseconds: 200),
+                                            () {
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const MainScreen()),
+                                                  (Route route) => false);
+                                        });
+                                      });
+                                },
+                                child: Text("Confirm  Booking"),
                               ),
-                              textCancel: "NO",
-                              textConfirm: "YES",
-                              barrierDismissible: false,
-                              confirmTextColor: Colors.white,
-                              cancelTextColor: textColor,
-                              buttonColor: Colors.green,
-                              onConfirm: () async {
-                                int newBookingId =
-                                    await bookingController.addBooking(
-                                  selectedCourse!,
-                                  widget.teacher.id!,
-                                  authController.authId,
-                                  formatter.format(calendarController
-                                      .selectedDateTime.value),
-                                  15 + selectedSloats,
-                                  15 + selectedSloats + 1,
-                                );
-
-                                navBarController.selectedIndex.value = 2;
-
-                                // Calculating seconds beetween today & half of haur before meeting starting
-                                DateTime bookingDate = calendarController
-                                    .selectedDateTime.value
-                                    .add(Duration(hours: 15 + selectedSloats));
-
-                                DateTime halfHourBeforeLecture =
-                                    bookingDate.subtract(Duration(minutes: 30));
-
-                                int showNotificationAfterSeconds =
-                                    secondsBetween(
-                                        DateTime.now(), halfHourBeforeLecture);
-
-                                // se manca più di mezz'ora all'inizio altrimenti non mandare notifica
-
-                                if (halfHourBeforeLecture
-                                        .compareTo(DateTime.now()) >
-                                    0) {
-                                  await notificationServices
-                                      .showScheduleNotification(
-                                          id: newBookingId,
-                                          title:
-                                              "Today lesson is about to begin!",
-                                          body:
-                                              "Hei ${authController.authUsername}! we remind you that there is less than half an hour until your lesson with the teacher ${widget.teacher.name} begins. Details -> DATE: ${formatter.format(calendarController.selectedDateTime.value)} SLOT TIME: ${calendarController.dailyBookingSoltList[selectedSloats].from} - ${calendarController.dailyBookingSoltList[selectedSloats].to}. We wish you good learning!",
-                                          seconds:
-                                              showNotificationAfterSeconds);
-                                }
-
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainScreen()),
-                                    (Route route) => false);
-                              });
-                        },
-                        child: Text("Confirm  Booking"),
-                      ),
-                    )),
+                            )),
         ],
       ),
     );

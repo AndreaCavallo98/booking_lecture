@@ -5,6 +5,7 @@ import 'package:booking_lecture/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import 'app_theme_dark.dart';
 import 'controller/auth_controller.dart';

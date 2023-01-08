@@ -1,3 +1,4 @@
+import 'package:booking_lecture/components/custom_show_case_widget.dart';
 import 'package:booking_lecture/constants.dart';
 import 'package:booking_lecture/controller/teacher_controller.dart';
 import 'package:booking_lecture/models/Course.dart';
@@ -5,6 +6,8 @@ import 'package:booking_lecture/screens/details/teacher_details_screen.dart';
 import 'package:booking_lecture/screens/teacher/components/teacher_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../components/custom_app_bar.dart';
 import '../../models/Teacher.dart';
@@ -23,11 +26,21 @@ class _TeacherScreenState extends State<TeacherScreen> {
   final searchController = TextEditingController();
   //String searchInput = te;
 
+  GlobalKey keyFilters = GlobalKey();
+  GlobalKey keySearchbar = GlobalKey();
+
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final _box = GetStorage();
+      bool showCaseHomePage = await _box.read("SHOWCASE_TEACHERS");
+      if (showCaseHomePage == null) {
+        ShowCaseWidget.of(context).startShowCase([keyFilters, keySearchbar]);
+        _box.write("SHOWCASE_TEACHERS", false);
+      }
+
       searchController.text = teacherController.searchInput;
       teacherController.getTeacher("all");
     });
@@ -46,8 +59,11 @@ class _TeacherScreenState extends State<TeacherScreen> {
                       : Colors.white,
                   //title: Text("PROVAAAAAAA"),
                   expandedHeight: 100,
-                  flexibleSpace:
-                      const CustomAppBar(text: "Teachers", title: "All"),
+                  flexibleSpace: CustomAppBar(
+                    text: "Teachers",
+                    title: "All",
+                    keyShowCase: keyFilters,
+                  ),
                 ),
               ]),
           body: Column(
@@ -59,19 +75,24 @@ class _TeacherScreenState extends State<TeacherScreen> {
                 height: 80,
                 child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search name or course...',
-                        border: OutlineInputBorder(
-                            //borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: primaryColor))),
-                    onChanged: ((value) {
-                      setState(() {
-                        teacherController.searchInput = value;
-                      });
-                    }),
+                  child: CustomShowCaseWidget(
+                    globalKey: keySearchbar,
+                    description:
+                        "Use this searchbar to quickly search by course or teacher's name/surname",
+                    child: TextField(
+                      controller: searchController,
+                      decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: 'Search name or course...',
+                          border: OutlineInputBorder(
+                              //borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: primaryColor))),
+                      onChanged: ((value) {
+                        setState(() {
+                          teacherController.searchInput = value;
+                        });
+                      }),
+                    ),
                   ),
                 ),
               ),

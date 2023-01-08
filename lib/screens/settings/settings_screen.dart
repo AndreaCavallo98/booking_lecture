@@ -77,15 +77,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              SettingTab(
-                text: "Select language",
-                icon: Icon(
-                  Icons.language,
-                  color: primaryColor,
-                ),
-                value: true,
-                onChanged: (value) {},
-              ),
               Padding(
                 padding: const EdgeInsets.all(defaultPadding),
                 child: ElevatedButton(

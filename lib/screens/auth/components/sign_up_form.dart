@@ -1,3 +1,4 @@
+import 'package:booking_lecture/screens/auth/sign_in_screen.dart';
 import 'package:booking_lecture/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -98,10 +99,7 @@ class SignUpForm extends StatelessWidget {
                   );
 
                   if (authResponse.authError == "") {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => MainScreen()),
-                        (Route route) => false);
-                    // Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   } else {
                     Get.snackbar("Registration Error", authResponse.authError,
                         snackPosition: SnackPosition.BOTTOM,

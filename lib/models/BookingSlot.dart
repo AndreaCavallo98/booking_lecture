@@ -5,17 +5,17 @@ import 'package:flutter/foundation.dart';
 class BookingSlot {
   late int from;
   late int to;
-  late bool avaliable;
+  late String status;
 
   BookingSlot({
     required this.from,
     required this.to,
-    required this.avaliable,
+    required this.status,
   });
 
   BookingSlot.fromJson(Map<String, dynamic> json) {
     from = json['from'];
     to = json['to'];
-    avaliable = json['avaliable'];
+    status = json['status'];
   }
 }

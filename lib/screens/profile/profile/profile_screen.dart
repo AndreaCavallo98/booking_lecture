@@ -1,7 +1,9 @@
+import 'package:booking_lecture/components/custom_show_case_widget.dart';
 import 'package:booking_lecture/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../constants.dart';
 import '../../settings/settings_screen.dart';
@@ -15,10 +17,20 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   AuthController authController = Get.find();
+  GlobalKey keySettings = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final _box = GetStorage();
+      bool showCaseHomePage = await _box.read("SHOWCASE_PROFILE");
+      if (showCaseHomePage == null) {
+        ShowCaseWidget.of(context).startShowCase([keySettings]);
+        _box.write("SHOWCASE_PROFILE", false);
+      }
+    });
   }
 
   @override
@@ -30,16 +42,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(color: Get.isDarkMode ? Colors.white : textColor),
         ),
         actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SettingsScreen(),
+          CustomShowCaseWidget(
+            globalKey: keySettings,
+            description: "Tap here to update the application settings",
+            child: IconButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsScreen(),
+                ),
               ),
-            ),
-            icon: Icon(
-              Icons.settings,
-              color: primaryColor,
+              icon: Icon(
+                Icons.settings,
+                color: primaryColor,
+              ),
             ),
           ),
         ],

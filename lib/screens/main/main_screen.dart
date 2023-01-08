@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../dashboard/dashboard_screen.dart';
 
@@ -40,6 +41,6 @@ class _MainScreenState extends State<MainScreen> {
           )
         : authController.jwtToken == ""
             ? SignInScreen()
-            : DashBoard());
+            : ShowCaseWidget(builder: Builder(builder: (_) => DashBoard())));
   }
 }
